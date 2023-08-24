@@ -1,0 +1,77 @@
+1 Academy Manufactor (mh2) 219
+1 Animation Module (kld) 194
+1 Arcane Denial (all) 22b
+1 Arcbound Crusher (dst) 95
+1 Baral, Chief of Compliance (mul) 8
+1 Belisarius Cawl (40k) 106
+1 Blossoming Sands (m20) 243
+1 Canopy Vista (ncc) 389
+1 Command Tower (cmr) 350
+1 Crucible of Worlds (2x2) 303
+1 Cultivate (moc) 295
+1 Dance of the Manse (peld) 186p
+1 Deeproot Wayfinder (mom) 184
+1 Digsite Engineer (c21) 15
+1 Disdainful Stroke (snc) 39
+1 Disruption Protocol (neo) 51
+1 Elfhame Palace (scd) 299
+1 Emmara, Soul of the Accord (grn) 168
+1 Emry, Lurker of the Loch (eld) 43
+1 Encroaching Mycosynth (one) 47
+1 Enhanced Surveillance (grn) 40
+1 Eternal Witness (c15) 183
+1 Faithful Mending (mid) 221
+4 Forest (clb) 469
+1 Fortified Village (onc) 154
+1 Gala Greeters (snc) 450
+1 Graypelt Refuge (c19) 249
+1 Growth Spiral (cmr) 446
+1 Haywire Mite (bro) 199
+1 Inspiring Statuary (brr) 85
+1 Invasion of Ikoria (mom) 190
+1 Invasion of New Phyrexia  (mom) 239
+1 Invasion of Segovia (mom) 63
+18 Island (snc) 265
+1 Junk Winder (mh2) 48
+1 Kappa Cannoneer (nec) 50
+1 Littjara Mirrorlake (ncc) 412
+1 Lonis, Cryptozoologist (mh2) 204
+1 Make Disappear (snc) 49
+1 Malcator, Purity Overseer (one) 320
+1 Mind Stone (40k) 244
+1 Monastery Mentor (mom) 28
+1 Mondrak, Glory Dominus (one) 299
+1 Nature's Lore (clb) 244
+1 Negate (rix) 44
+1 Ongoing Investigation (soi) 77
+1 Ornithopter of Paradise (mh2) 430
+4 Plains (dmu) 262
+1 Platoon Dispenser (bro) 36
+1 Progenitor Exarch (mom) 32
+1 Protect the Negotiators (dmu) 62
+1 Rampant Growth (nec) 125
+1 Rise and Shine (mh2) 58
+1 Sai, Master Thopterist (nec) 97
+1 Sarinth Steelseeker (bro) 189
+1 Scaretiller (c19) 57
+1 Skrelv's Hive (one) 376
+1 Sol Ring (c20) 252
+1 Sunfall (mom) 40
+1 Teething Wurmlet (bro) 192
+1 Temple of Plenty (onc) 170
+1 Terramorphic Expanse (cmr) 357
+1 Tezzeret, Betrayer of Flesh (neo) 84
+1 Thirst for Knowledge (neo) 85
+1 Thopter Spy Network (nec) 98
+1 Thran Spider (bro) 254
+1 Tireless Tracker (plist) 435
+1 Tocasia, Dig Site Mentor (bro) 224
+1 Tocasia's Dig Site (bro) 266
+1 Tranquil Expanse (ogw) 180
+1 Transcendent Message (mom) 83
+1 Unctus, Grand Metatect (one) 75
+1 Urza's Command (bro) 70
+1 Vorinclex (mom) 301
+1 Whir of Invention (aer) 49
+1 Whirler Rogue (nec) 101
+1 Wrenn and Realmbreaker (mom) 217

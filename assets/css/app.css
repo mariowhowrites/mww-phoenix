@@ -1,0 +1,73 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+/* This file is for your main application CSS */
+
+.mww {
+    @apply font-body text-gray-300 text-lg;
+}
+
+.mww p {
+    @apply mb-4 max-w-xl mx-auto;
+}
+
+.mww a {
+    @apply text-blue-500 underline;
+}
+
+.mww h1, .mww h2, .mww h3, .mww h4, .mww h5, .mww h6 {
+    @apply max-w-xl mx-auto font-heading;
+}
+
+.mww h2 {
+    @apply text-2xl mt-8 mb-4;
+}
+
+.mww ul, .mww ol {
+    @apply max-w-xl mx-auto list-outside pl-4 mb-4;
+}
+
+.mww li {
+    @apply mb-2 pl-2;
+}
+
+.mww ul {
+    @apply list-disc;
+}
+
+.mww ol {
+    @apply list-decimal;
+}
+
+@font-face {
+    font-family: "Agrandir";
+    font-weight: 400;
+    src: url("/fonts/Agrandir-Regular.otf") format("opentype");
+}
+
+
+@font-face {
+    font-family: "Agrandir";
+    font-weight: 700;
+    src: url("/fonts/Agrandir-TextBold.otf") format("opentype");
+}
+
+@font-face {
+    font-family: "Agrandir";
+    font-weight: 400;
+    font-style: italic;
+    src: url("/fonts/Agrandir-Italic.otf") format("opentype");
+}
+
+@font-face {
+    font-family: "Telegraf";
+    font-weight: 400;
+    src: url("/fonts/Telegraf-Regular.otf") format("opentype");
+}
+
+@font-face {
+    font-family: "Telegraf";
+    font-weight: 700;
+    src: url("/fonts/Telegraf-Bold.otf") format("opentype");
+}
