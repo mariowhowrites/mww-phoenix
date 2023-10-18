@@ -9,7 +9,7 @@ tags:
 image: /images/castle.avif
 date: "2023-10-06"
 slug: mtg-treachery
----G
+---
 I regularly play a version of Magic the Gathering called [Treachery](https://www.notion.so/MtgTreachery-Blog-Post-473d0c0e26484edcab975d49ff6f9743?pvs=21), a multiplayer format that’s effectively Mafia meets Commander. 
 
 The primary way in which this format is unique is that every player is assigned one of four roles, each with a unique win condition and tied to a powerful, one-time ability.
