@@ -34,7 +34,7 @@ defmodule MwwPhoenixWeb.ArticleLive.Index do
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "Listing Articles")
+    |> assign(:page_title, "MarioWhoWrites")
     |> assign(:article, nil)
   end
 

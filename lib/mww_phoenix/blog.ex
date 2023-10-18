@@ -21,7 +21,7 @@ defmodule MwwPhoenix.Blog do
   def list_articles do
     File.ls!(Application.app_dir(:mww_phoenix, "priv/content"))
     |> Enum.map(&get_article!/1)
-    |> Enum.sort_by(&(&1.frontmatter["date"]), :desc)
+    |> Enum.sort_by(& &1.frontmatter["date"], :desc)
   end
 
   def list_published_articles() do

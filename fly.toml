@@ -12,7 +12,7 @@ swap_size_mb = 512
   release_command = "/app/bin/migrate"
 
 [env]
-  PHX_HOST = "mariowhowrites.fly.dev"
+  PHX_HOST = "mariovega.dev"
   PORT = "8080"
 
 [http_service]

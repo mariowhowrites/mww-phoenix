@@ -24,6 +24,10 @@
     @apply text-2xl mt-8 mb-4;
 }
 
+.mww h3 {
+    @apply text-xl mt-8 mb-4;
+}
+
 .mww ul, .mww ol {
     @apply max-w-xl mx-auto list-outside pl-4 mb-4;
 }
@@ -38,6 +42,10 @@
 
 .mww ol {
     @apply list-decimal;
+}
+
+.mww pre {
+    @apply mb-4;
 }
 
 @font-face {
