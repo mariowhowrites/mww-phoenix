@@ -18,8 +18,9 @@ defmodule MwwPhoenixWeb.Router do
     pipe_through :browser
 
     live "/", ArticleLive.Index, :index
-
     live "/articles/:slug", ArticleLive.Show, :show
+
+    get "/feed", RssController, :all
   end
 
   # Other scopes may use custom stacks.

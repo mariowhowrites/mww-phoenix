@@ -51,7 +51,8 @@ defmodule MwwPhoenix.MixProject do
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
       {:yaml_elixir, "~> 2.9.0"},
-      {:earmark, "~> 1.4.39"}
+      {:earmark, "~> 1.4.39"},
+      {:xml_builder, "~> 2.1"}
     ]
   end
 

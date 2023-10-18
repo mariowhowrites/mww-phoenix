@@ -7,7 +7,7 @@ tags:
   - nodejs 
   - postcss
 category: Technical
-date: "2019-04-05T22:12:03.284Z"
+date: "2019-04-05"
 slug: parsing-tailwind-css
 ---
 
