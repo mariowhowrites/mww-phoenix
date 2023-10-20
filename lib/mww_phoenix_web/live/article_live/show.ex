@@ -19,8 +19,9 @@ defmodule MwwPhoenixWeb.ArticleLive.Show do
   defp page_title(:show), do: "Show Article"
 
   def tag_class_string(article) do
-    bg_color = article.frontmatter["category"]
-    |> get_background_color()
+    bg_color =
+      article.frontmatter["category"]
+      |> get_background_color()
 
     "text-sm font-medium text-white self-start #{bg_color} rounded-lg px-2 mr-3"
   end
@@ -32,5 +33,27 @@ defmodule MwwPhoenixWeb.ArticleLive.Show do
       "Technical" -> "bg-indigo-600"
       "Magic" -> "bg-amber-600"
     end
+  end
+
+  def article_image(assigns) do
+    ~H"""
+    <img
+      class="h-124 w-full object-cover mb-8"
+      srcset={srcset(@article)}
+      src={static_path(@socket, @article.frontmatter["image"])}
+      sizes="(max-width: 1024px) 512px, 1024vw"
+      alt={@article.frontmatter["title"]}
+    />
+    """
+  end
+
+  defp srcset(article) do
+    image_name = Path.basename(article.frontmatter["image"])
+
+    MwwPhoenix.ResponsiveImageGenerator.dimensions()
+    |> Enum.map(fn {device, width} ->
+      "/images/responsive/#{device}/#{image_name} #{width}w"
+    end)
+    |> Enum.join(", ")
   end
 end

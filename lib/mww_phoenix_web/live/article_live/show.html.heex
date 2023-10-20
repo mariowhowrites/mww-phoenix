@@ -24,11 +24,7 @@
       <% end %>
     </div>
   </aside>
-  <img
-    class="h-124 w-full object-cover mb-8"
-    src={static_path(@socket, @article.frontmatter["image"])}
-    alt={@article.frontmatter["title"]}
-  />
+  <%= article_image(assigns) %>
   <%!-- {
     article.decklist && <DecklistComponent decklist={article.decklist} />
   } --%>

@@ -94,12 +94,35 @@ defmodule MwwPhoenixWeb.ArticleLive.Index do
 
     ~H"""
     <button
-      class={@button_classes <> " border mr-6 shadow-xl text-3xl px-4 rounded-sm"}
+      class={@button_classes <> " border shadow-xl text-xl md:text-3xl px-4 rounded-sm"}
       phx-click="toggle_selected_category"
       phx-value-category={@category}
     >
       <%= @category %>
     </button>
     """
+  end
+
+  def article_image(article) do
+    assigns = %{article: article}
+
+    ~H"""
+    <img
+      class="max-h-96 w-full object-cover"
+      srcset={srcset(@article)}
+      sizes="(max-width: 1024px) 512px, 1024vw"
+      alt={@article.frontmatter["title"]}
+    />
+    """
+  end
+
+  defp srcset(article) do
+    image_name = Path.basename(article.frontmatter["image"])
+
+    MwwPhoenix.ResponsiveImageGenerator.dimensions()
+    |> Enum.map(fn {device, width} ->
+      "/images/responsive/#{device}/#{image_name} #{width}w"
+    end)
+    |> Enum.join(", ")
   end
 end
