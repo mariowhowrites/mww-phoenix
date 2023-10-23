@@ -26,7 +26,9 @@ let Hooks = {}
 
 Hooks.CodeHighlight = {
     mounted() {
-        hljs.highlightAll()
+        if (hljs) {
+            hljs.highlightAll()
+        }
     }
 }
 
