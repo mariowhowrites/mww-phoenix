@@ -7,7 +7,7 @@
       Words about various subjects
     </p>
   </div>
-  <aside id="CategorySelect" class="max-w-lg mx-auto mt-8 mb:8 md:mb-12 gap-6 flex justify-center">
+  <aside id="CategorySelect" class="max-w-lg mx-auto my-8 gap-6 flex justify-center">
     <%= for category <- @categories do %>
         <.blog_index_category_button
           category={category}
@@ -15,12 +15,12 @@
         />
     <% end %>
   </aside>
-  <div class="mt-16 max-w-lg mx-auto flex flex-col">
-    <%= for article <- @articles do %>
+  <main role="main" class="mt-12 max-w-lg mx-auto flex flex-col">
+    <%= for {article, index} <- Enum.with_index(@articles) do %>
       <article class="flex flex-col overflow-hidden first:mt-0 mt-16">
         <div className="flex-shrink-0">
           <%= if article.frontmatter["image"] do %>
-            <%= article_image(article) %>
+            <%= article_image(article, index) %>
           <% end %>
         </div>
         <div class="flex-1 pt-3 flex flex-col justify-between">
@@ -35,12 +35,12 @@
                 <%= article.frontmatter.category %>
               </a>
             </p> --%>
-            <p class="text-base font-body text-gray-500">
+            <p class="text-base font-body text-gray-300 italic">
               <%= article.frontmatter["description"] %>
             </p>
           </div>
         </div>
       </article>
     <% end %>
-  </div>
+  </main>
 </div>
