@@ -52,6 +52,7 @@
     font-family: "Agrandir";
     font-weight: 400;
     src: url("/fonts/Agrandir-Regular.otf") format("opentype");
+    font-display: swap;
 }
 
 
@@ -59,6 +60,7 @@
     font-family: "Agrandir";
     font-weight: 700;
     src: url("/fonts/Agrandir-TextBold.otf") format("opentype");
+    font-display: swap;
 }
 
 @font-face {
@@ -66,16 +68,19 @@
     font-weight: 400;
     font-style: italic;
     src: url("/fonts/Agrandir-Italic.otf") format("opentype");
+    font-display: swap;
 }
 
 @font-face {
     font-family: "Telegraf";
     font-weight: 400;
     src: url("/fonts/Telegraf-Regular.otf") format("opentype");
+    font-display: swap;
 }
 
 @font-face {
     font-family: "Telegraf";
     font-weight: 700;
     src: url("/fonts/Telegraf-Bold.otf") format("opentype");
+    font-display: swap;
 }
