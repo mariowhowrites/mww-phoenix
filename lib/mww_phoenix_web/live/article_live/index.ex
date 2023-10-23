@@ -7,7 +7,7 @@ defmodule MwwPhoenixWeb.ArticleLive.Index do
   @impl true
   def mount(_params, _session, socket) do
     articles = Blog.list_published_articles()
-    categories = Enum.map(articles, &(&1.frontmatter["category"])) |> Enum.uniq()
+    categories = Enum.map(articles, & &1.frontmatter["category"]) |> Enum.uniq()
 
     {
       :ok,
@@ -39,12 +39,16 @@ defmodule MwwPhoenixWeb.ArticleLive.Index do
   end
 
   def handle_event("toggle_selected_category", %{"category" => category}, socket) do
-    new_selected_category = if socket.assigns.selected_category != category, do: category, else: nil
-    new_articles = if new_selected_category != nil do
-      Enum.filter(Blog.list_published_articles(), &(&1.frontmatter["category"] == category))
-    else
-      Blog.list_published_articles()
-    end
+    new_selected_category =
+      if socket.assigns.selected_category != category, do: category, else: nil
+
+    new_articles =
+      if new_selected_category != nil do
+        Enum.filter(Blog.list_published_articles(), &(&1.frontmatter["category"] == category))
+      else
+        Blog.list_published_articles()
+      end
+
     {
       :noreply,
       socket
@@ -86,11 +90,15 @@ defmodule MwwPhoenixWeb.ArticleLive.Index do
 
     color_classes = Map.get(color_map, String.to_atom(color))
 
-    assigns = assign(
-      assigns,
-      :button_classes,
-      (if assigns.category == assigns.selected_category, do: color_classes.selected, else: color_classes.nonselected)
-    )
+    assigns =
+      assign(
+        assigns,
+        :button_classes,
+        if(assigns.category == assigns.selected_category,
+          do: color_classes.selected,
+          else: color_classes.nonselected
+        )
+      )
 
     ~H"""
     <button
@@ -103,14 +111,15 @@ defmodule MwwPhoenixWeb.ArticleLive.Index do
     """
   end
 
-  def article_image(article) do
-    assigns = %{article: article}
+  def article_image(article, index) do
+    assigns = %{article: article, index: index}
 
     ~H"""
     <img
+      fetchpriority={if @index < 2, do: "high", else: "low"}
       class="max-h-96 w-full object-cover"
       srcset={srcset(@article)}
-      sizes="(max-width: 1024px) 512px, 1024vw"
+      sizes="(max-width: 1024px) 512px, 1024px"
       alt={@article.frontmatter["title"]}
     />
     """

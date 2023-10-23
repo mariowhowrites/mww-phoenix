@@ -4,10 +4,7 @@ defmodule MwwPhoenix.Blog do
   """
 
   import Ecto.Query, warn: false
-  alias MwwPhoenix.Repo
-
-  alias MwwPhoenix.Blog.Article
-  alias MwwPhoenix.Blog.Parser
+  alias MwwPhoenix.Blog.{Parser,Cache}
 
   @doc """
   Returns the list of articles.
@@ -21,11 +18,12 @@ defmodule MwwPhoenix.Blog do
   def list_articles do
     File.ls!(Application.app_dir(:mww_phoenix, "priv/content"))
     |> Enum.map(&get_article!/1)
-    |> Enum.sort_by(& &1.frontmatter["date"], :desc)
   end
 
   def list_published_articles() do
-    list_articles() |> Enum.filter(&(&1.frontmatter["published"] == true))
+    Cache.all()
+    |> Enum.sort_by(& &1.frontmatter["date"], :desc)
+    |> Enum.filter(&(&1.frontmatter["published"] == true))
   end
 
   def get_article!(slug) do

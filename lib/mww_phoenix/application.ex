@@ -17,9 +17,10 @@ defmodule MwwPhoenix.Application do
       # Start Finch
       {Finch, name: MwwPhoenix.Finch},
       # Start the Endpoint (http/https)
-      MwwPhoenixWeb.Endpoint
+      MwwPhoenixWeb.Endpoint,
       # Start a worker by calling: MwwPhoenix.Worker.start_link(arg)
-      # {MwwPhoenix.Worker, arg}
+      # {MwwPhoenix.Worker, arg},
+      MwwPhoenix.Blog.Cache
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

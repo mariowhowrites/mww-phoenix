@@ -1,7 +1,7 @@
 defmodule MwwPhoenixWeb.ArticleLive.Show do
   use MwwPhoenixWeb, :live_view
 
-  alias MwwPhoenix.Blog
+  alias MwwPhoenix.Blog.Cache
 
   @impl true
   def mount(_params, _session, socket) do
@@ -13,7 +13,7 @@ defmodule MwwPhoenixWeb.ArticleLive.Show do
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:article, Blog.get_article!(slug))}
+     |> assign(:article, Cache.get(slug))}
   end
 
   defp page_title(:show), do: "Show Article"
