@@ -7,7 +7,7 @@
       Words about various subjects
     </p>
   </div>
-  <aside id="CategorySelect" class="max-w-lg mx-auto my-8 gap-6 flex justify-center">
+  <aside id="CategorySelect" class="max-w-[50%] md:max-w-lg mx-auto my-8 gap-4 md:gap-6 flex flex-col md:flex-row justify-center">
     <%= for category <- @categories do %>
         <.blog_index_category_button
           category={category}
