@@ -14,10 +14,16 @@ defmodule MwwPhoenix.Blog.Parser do
       [frontmatter, content] ->
         {:ok, frontmatter} = YamlElixir.read_from_string(frontmatter, atoms: true)
         {:ok, content, _warnings} = Earmark.as_html(content)
-        %{
-          frontmatter: frontmatter,
-          content: content
-        }
+        # %{
+        #   frontmatter: frontmatter,
+        #   content: content
+        # }
+
+        article = Map.merge(frontmatter, %{
+          "content" => content
+        })
+
+        for {key, value} <- article, into: %{}, do: {String.to_atom(key), value}
     end
   end
 end

@@ -7,7 +7,7 @@ defmodule MwwPhoenixWeb.ArticleLive.Index do
   @impl true
   def mount(_params, _session, socket) do
     articles = Blog.list_published_articles()
-    categories = Enum.map(articles, & &1.frontmatter["category"]) |> Enum.uniq()
+    categories = Enum.map(articles, & &1.category) |> Enum.uniq()
 
     {
       :ok,
@@ -34,7 +34,7 @@ defmodule MwwPhoenixWeb.ArticleLive.Index do
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "MarioWhoWrites")
+    |> assign(:page_title, "All Writings")
     |> assign(:article, nil)
   end
 
@@ -44,7 +44,7 @@ defmodule MwwPhoenixWeb.ArticleLive.Index do
 
     new_articles =
       if new_selected_category != nil do
-        Enum.filter(Blog.list_published_articles(), &(&1.frontmatter["category"] == category))
+        Enum.filter(Blog.list_published_articles(), &(&1.category == category))
       else
         Blog.list_published_articles()
       end
@@ -120,13 +120,13 @@ defmodule MwwPhoenixWeb.ArticleLive.Index do
       class="max-h-96 w-full object-cover"
       srcset={srcset(@article)}
       sizes="(max-width: 1024px) 512px, 1024px"
-      alt={@article.frontmatter["title"]}
+      alt={@article.title}
     />
     """
   end
 
   defp srcset(article) do
-    image_name = Path.basename(article.frontmatter["image"])
+    image_name = Path.basename(article.image)
 
     MwwPhoenix.ResponsiveImageGenerator.dimensions()
     |> Enum.map(fn {device, width} ->

@@ -1,7 +1,7 @@
 defmodule MwwPhoenixWeb.ArticleLive.Show do
   use MwwPhoenixWeb, :live_view
 
-  alias MwwPhoenix.Blog.Cache
+  alias MwwPhoenix.Blog.{Cache,Article}
 
   @impl true
   def mount(_params, _session, socket) do
@@ -10,17 +10,17 @@ defmodule MwwPhoenixWeb.ArticleLive.Show do
 
   @impl true
   def handle_params(%{"slug" => slug}, _, socket) do
+    article = Cache.get(slug)
+
     {:noreply,
      socket
-     |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:article, Cache.get(slug))}
+     |> assign(:page_title, article.title)
+     |> assign(:article, article)}
   end
-
-  defp page_title(:show), do: "Show Article"
 
   def tag_class_string(article) do
     bg_color =
-      article.frontmatter["category"]
+      article.category
       |> get_background_color()
 
     "text-sm font-medium text-white self-start #{bg_color} rounded-lg px-2 mr-3"
@@ -39,21 +39,11 @@ defmodule MwwPhoenixWeb.ArticleLive.Show do
     ~H"""
     <img
       class="h-124 w-full object-cover mb-8"
-      srcset={srcset(@article)}
-      src={static_path(@socket, @article.frontmatter["image"])}
+      srcset={Article.srcset(@article)}
+      src={static_path(@socket, @article.image)}
       sizes="(max-width: 1024px) 512px, 1024vw"
-      alt={@article.frontmatter["title"]}
+      alt={@article.title}
     />
     """
-  end
-
-  defp srcset(article) do
-    image_name = Path.basename(article.frontmatter["image"])
-
-    MwwPhoenix.ResponsiveImageGenerator.dimensions()
-    |> Enum.map(fn {device, width} ->
-      "/images/responsive/#{device}/#{image_name} #{width}w"
-    end)
-    |> Enum.join(", ")
   end
 end

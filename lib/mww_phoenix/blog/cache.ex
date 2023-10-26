@@ -28,7 +28,7 @@ defmodule MwwPhoenix.Blog.Cache do
   end
 
   def handle_call({:get, slug}, _caller, articles) do
-    article = Enum.find(articles, &(&1.frontmatter["slug"] == slug))
+    article = Enum.find(articles, &(&1.slug == slug))
 
     {:reply, article, articles}
   end

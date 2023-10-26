@@ -22,8 +22,8 @@ defmodule MwwPhoenix.Blog do
 
   def list_published_articles() do
     Cache.all()
-    |> Enum.sort_by(& &1.frontmatter["date"], :desc)
-    |> Enum.filter(&(&1.frontmatter["published"] == true))
+    |> Enum.sort_by(& &1.date, :desc)
+    |> Enum.filter(&(&1.published == true))
   end
 
   def get_article!(slug) do
@@ -31,7 +31,7 @@ defmodule MwwPhoenix.Blog do
   end
 
   def get_slug(article) do
-    article.frontmatter["title"]
+    article.title
     |> String.downcase()
     |> String.replace(",", "")
     |> String.replace(" ", "-")

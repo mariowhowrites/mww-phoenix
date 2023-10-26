@@ -15,7 +15,7 @@ defmodule MwwPhoenix.ResponsiveImageGenerator do
   Then, we want to generate a responsive image for each image.
   Finally, we want to save the responsive image in the priv/static directory.
   """
-  def generate_responsive_image() do
+  def generate_responsive_images() do
     # fetch all images in the priv/content directory
     old_paths = Path.wildcard("priv/content/**/*.{jpg,jpeg,png,avif,webp}")
 
@@ -28,10 +28,6 @@ defmodule MwwPhoenix.ResponsiveImageGenerator do
         run_imagemagick(old_path, new_path, width)
       end)
     end)
-  end
-
-  def get_old_paths() do
-    Path.wildcard("priv/content/**/*.{jpg,jpeg,png,avif,webp}")
   end
 
   defp run_imagemagick(old_file_path, new_file_path, width) do
