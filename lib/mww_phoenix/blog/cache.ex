@@ -13,6 +13,10 @@ defmodule MwwPhoenix.Blog.Cache do
     GenServer.call(__MODULE__, {:all})
   end
 
+  def most_recent() do
+    GenServer.call(__MODULE__, {:most_recent})
+  end
+
   def get(slug) do
     GenServer.call(__MODULE__, {:get, slug})
   end
@@ -25,6 +29,15 @@ defmodule MwwPhoenix.Blog.Cache do
 
   def handle_call({:all}, _caller, articles) do
     {:reply, articles, articles}
+  end
+
+  def handle_call({:most_recent}, _caller, articles) do
+    article = articles
+      |> Enum.filter(& &1.published == true)
+      |> Enum.sort_by(& &1.date, :desc)
+      |> List.first()
+
+    {:reply, article, articles}
   end
 
   def handle_call({:get, slug}, _caller, articles) do

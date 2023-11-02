@@ -26,19 +26,34 @@ defmodule MwwPhoenix.Blog.Article do
     |> Enum.join(", ")
   end
 
+  defp site_hostname() do
+    Application.get_env(:mww_phoenix, MwwPhoenixWeb.Endpoint)[:url][:host]
+  end
+
+  def full_image_url(article) do
+    "https://#{site_hostname()}#{article.image}"
+  end
+
   def build_meta_tags(article) do
-    # this should provide a map of values that should be added to SEO header information for a given article.
+    %{
+      "og:title" => article.title,
+      "og:description" => article.description,
+      "og:image" => desktop_image_url(article),
+      "og:url" => full_url(article),
+      "twitter:card" => "summary_large_image",
+      "twitter:creator" => "@mariowhowrites"
+    }
+  end
 
-    # popular seo tags are:
+  def desktop_image_url(article) do
+    "https://#{site_hostname()}/images/responsive/desktop/#{Path.basename(article.image)}"
+  end
 
-    # og:title
-    # og:description
-    # og:image
-    # og:url
+  def mobile_image_url(article) do
+    "https://#{site_hostname()}/images/responsive/mobile/#{Path.basename(article.image)}"
+  end
 
-    # twitter:card
-    # twitter:site
-    # twitter:creator
-
+  def full_url(article) do
+    "https://#{site_hostname()}/articles/#{article.slug}"
   end
 end

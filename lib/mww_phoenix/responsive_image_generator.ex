@@ -1,7 +1,7 @@
 defmodule MwwPhoenix.ResponsiveImageGenerator do
   @dimensions [
     mobile: "512",
-    desktop: "1024"
+    desktop: "1400"
   ]
 
   @moduledoc """
@@ -50,8 +50,6 @@ defmodule MwwPhoenix.ResponsiveImageGenerator do
       "82",
       "-define",
       "jpeg:fancy-upsampling=off",
-      "-define",
-      "png:compression-filter=5",
       "-define",
       "png:compression-level=9",
       "-define",

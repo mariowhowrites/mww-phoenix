@@ -40,8 +40,8 @@ defmodule MwwPhoenixWeb.ArticleLive.Show do
     <img
       class="h-124 w-full object-cover mb-8"
       srcset={Article.srcset(@article)}
-      src={static_path(@socket, @article.image)}
-      sizes="(max-width: 1024px) 512px, 1024vw"
+      src={Article.desktop_image_url(@article)}
+      sizes="(max-width: 1024px) 512px, 1024px"
       alt={@article.title}
     />
     """

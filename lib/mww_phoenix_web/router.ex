@@ -1,5 +1,7 @@
 defmodule MwwPhoenixWeb.Router do
   use MwwPhoenixWeb, :router
+  alias MwwPhoenix.Blog.{Cache, Article}
+  import MwwPhoenixWeb.Plugs.AssignMetaTags
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -15,12 +17,12 @@ defmodule MwwPhoenixWeb.Router do
   end
 
   scope "/", MwwPhoenixWeb do
-    pipe_through :browser
+    pipe_through [:browser, :assign_meta_tags]
 
     live "/", ArticleLive.Index, :index
-    live "/articles/:slug", ArticleLive.Show, :show
 
     get "/feed", RssController, :all
+    live "/articles/:slug", ArticleLive.Show, :show
   end
 
   # Other scopes may use custom stacks.

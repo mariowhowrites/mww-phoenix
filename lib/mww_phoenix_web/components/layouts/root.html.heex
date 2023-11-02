@@ -7,6 +7,14 @@
     <.live_title suffix=" · mariovega.dev">
       <%= assigns[:page_title] || "MwwPhoenix" %>
     </.live_title>
+    <%!-- add meta tags for SEO accessibility --%>
+    <%= for {tag, value} <- @conn.assigns[:meta_tags] do %>
+        <%= if String.contains?(tag, "twitter") do %>
+            <meta name={tag} content={value} />
+        <% else %>
+            <meta property={tag} content={value} />
+        <% end %>
+    <% end %>
     <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"}>
     <link media="print" onload="this.media = 'all'" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/an-old-hope.min.css">
     <script async src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
