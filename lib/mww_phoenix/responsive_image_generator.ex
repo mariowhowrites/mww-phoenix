@@ -17,7 +17,7 @@ defmodule MwwPhoenix.ResponsiveImageGenerator do
   """
   def generate_responsive_images() do
     # fetch all images in the priv/content directory
-    old_paths = Path.wildcard("priv/content/**/*.{jpg,jpeg,png,avif,webp}")
+    old_paths = get_content_images()
 
     # generate a responsive image for each image
     Enum.each(old_paths, fn old_path ->
@@ -28,6 +28,10 @@ defmodule MwwPhoenix.ResponsiveImageGenerator do
         run_imagemagick(old_path, new_path, width)
       end)
     end)
+  end
+
+  defp get_content_images() do
+    Path.wildcard("priv/content/**/*.{jpg,jpeg,png,avif,webp}")
   end
 
   defp run_imagemagick(old_file_path, new_file_path, width) do

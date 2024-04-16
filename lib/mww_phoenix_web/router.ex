@@ -1,6 +1,5 @@
 defmodule MwwPhoenixWeb.Router do
   use MwwPhoenixWeb, :router
-  alias MwwPhoenix.Blog.{Cache, Article}
   import MwwPhoenixWeb.Plugs.AssignMetaTags
 
   pipeline :browser do

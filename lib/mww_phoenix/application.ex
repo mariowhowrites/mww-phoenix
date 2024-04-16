@@ -2,6 +2,7 @@ defmodule MwwPhoenix.Application do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
+  alias MwwPhoenix.ContentBuilder
 
   use Application
 
@@ -17,12 +18,12 @@ defmodule MwwPhoenix.Application do
       # Start Finch
       {Finch, name: MwwPhoenix.Finch},
       # Convert images in content dir to responsive images
-      MwwPhoenix.Tasks.ConvertImages,
+      # MwwPhoenix.Tasks.ConvertImages,
       # Start the Endpoint (http/https)
       MwwPhoenixWeb.Endpoint,
       # Start a worker by calling: MwwPhoenix.Worker.start_link(arg)
       # {MwwPhoenix.Worker, arg},
-      MwwPhoenix.Blog.Cache,
+      {MwwPhoenix.Blog.Cache, content: ContentBuilder.build()}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

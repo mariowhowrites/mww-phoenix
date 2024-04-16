@@ -1,16 +1,17 @@
 defmodule MwwPhoenix.Blog.Cache do
   use GenServer
-
-  alias MwwPhoenix.Blog
-
   # client fns
 
-  def start_link(_args) do
-    GenServer.start_link(__MODULE__, nil, name: __MODULE__)
+  def start_link(content: content) do
+    GenServer.start_link(__MODULE__, content, name: __MODULE__)
   end
 
   def all() do
     GenServer.call(__MODULE__, {:all})
+  end
+
+  def update_all(content) do
+    GenServer.cast(__MODULE__, {:update_all, content})
   end
 
   def most_recent() do
@@ -23,8 +24,8 @@ defmodule MwwPhoenix.Blog.Cache do
 
   # server fns
 
-  def init(_state) do
-    {:ok, Blog.list_articles()}
+  def init(content) do
+    {:ok, content}
   end
 
   def handle_call({:all}, _caller, articles) do
@@ -44,5 +45,9 @@ defmodule MwwPhoenix.Blog.Cache do
     article = Enum.find(articles, &(&1.slug == slug))
 
     {:reply, article, articles}
+  end
+
+  def handle_cast({:update_all, new_articles}, _articles) do
+    {:noreply, new_articles}
   end
 end

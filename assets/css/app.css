@@ -84,3 +84,34 @@
     src: url("/fonts/Telegraf-Bold.otf") format("opentype");
     font-display: swap;
 }
+
+@font-face {
+    font-family: "Neue Montreal";
+    font-weight: 400;
+    src: url("/fonts/NeueMontreal-Regular.otf") format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Neue Montreal";
+    font-weight: 700;
+    src: url("/fonts/NeueMontreal-Bold.otf") format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Neue Montreal";
+    font-weight: 400;
+    font-style: italic;
+    src: url("/fonts/NeueMontreal-Italic.otf") format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Neue Montreal";
+    font-weight: 700;
+    font-style: italic;
+    src: url("/fonts/NeueMontreal-BoldItalic.otf") format("opentype");
+    font-display: swap;
+}
+

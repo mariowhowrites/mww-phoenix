@@ -17,5 +17,9 @@ config :swoosh, api_client: Swoosh.ApiClient.Finch, finch_name: MwwPhoenix.Finch
 # Do not print debug messages in production
 config :logger, level: :info
 
+config :mww_phoenix, :notion,
+  api_key: System.get_env("NOTION_API_KEY"),
+  database_id: System.get_env("NOTION_DATABASE_ID")
+
 # Runtime production configuration, including reading
 # of environment variables, is done on config/runtime.exs.

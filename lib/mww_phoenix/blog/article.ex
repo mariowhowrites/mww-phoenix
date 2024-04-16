@@ -34,17 +34,6 @@ defmodule MwwPhoenix.Blog.Article do
     "https://#{site_hostname()}#{article.image}"
   end
 
-  def build_meta_tags(article) do
-    %{
-      "og:title" => article.title,
-      "og:description" => article.description,
-      "og:image" => desktop_image_url(article),
-      "og:url" => full_url(article),
-      "twitter:card" => "summary_large_image",
-      "twitter:creator" => "@mariowhowrites"
-    }
-  end
-
   def desktop_image_url(article) do
     "https://#{site_hostname()}/images/responsive/desktop/#{Path.basename(article.image)}"
   end
