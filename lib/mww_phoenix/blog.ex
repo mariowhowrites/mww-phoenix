@@ -4,6 +4,7 @@ defmodule MwwPhoenix.Blog do
   """
 
   import Ecto.Query, warn: false
+  alias MwwPhoenix.ContentBuilder
   alias MwwPhoenix.Blog.Cache
 
   @doc """
@@ -25,11 +26,23 @@ defmodule MwwPhoenix.Blog do
     |> Enum.filter(&(&1.published == true))
   end
 
+  def get_article(slug) do
+    Cache.get(slug)
+  end
+
+  def most_recent() do
+    Cache.most_recent()
+  end
+
   def get_slug(article) do
     article.title
     |> String.downcase()
     |> String.replace(",", "")
     |> String.replace(" ", "-")
+  end
+
+  def rebuild_content_cache() do
+    Cache.update_all(ContentBuilder.build())
   end
 
   def get_color_for_category(category) do

@@ -66,7 +66,7 @@ module.exports = {
             "height": theme("spacing.5")
           }
         }
-      }, {values})
+      }, {values})  
     })
   ]
 }

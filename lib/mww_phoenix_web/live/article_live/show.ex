@@ -1,21 +1,30 @@
 defmodule MwwPhoenixWeb.ArticleLive.Show do
   use MwwPhoenixWeb, :live_view
 
-  alias MwwPhoenix.Blog.{Cache,Article}
+  alias MwwPhoenix.Blog
+  alias MwwPhoenix.Blog.Article
 
   @impl true
-  def mount(_params, _session, socket) do
-    {:ok, socket}
+  def mount(%{"slug" => slug}, _session, socket) do
+    {:ok, socket |> assign(:slug, slug)}
   end
 
   @impl true
-  def handle_params(%{"slug" => slug}, _, socket) do
-    article = Cache.get(slug)
+  def handle_params(_params, _, socket) do
+    article = Blog.get_article(socket.assigns.slug)
 
     {:noreply,
      socket
      |> assign(:page_title, article.title)
-     |> assign(:article, article)}
+     |> assign(:article, article)
+     }
+  end
+
+  @impl true
+  def handle_event("rebuild_content_cache", _params, socket) do
+    Blog.rebuild_content_cache()
+
+    {:noreply, socket |> assign(:article, Blog.get_article(socket.assigns.slug))}
   end
 
   def tag_class_string(article) do

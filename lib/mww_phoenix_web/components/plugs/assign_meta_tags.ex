@@ -1,6 +1,7 @@
 defmodule MwwPhoenixWeb.Plugs.AssignMetaTags do
   import Plug.Conn
-  alias MwwPhoenix.Blog.{Cache, Article}
+  alias MwwPhoenix.Blog
+  alias MwwPhoenix.Blog.Article
 
   def assign_meta_tags(conn, _opts) do
     if Map.has_key?(conn.private, :phoenix_live_view) do
@@ -13,7 +14,7 @@ defmodule MwwPhoenixWeb.Plugs.AssignMetaTags do
   end
 
   defp assign_tags(conn, route) when route == MwwPhoenixWeb.ArticleLive.Show do
-    article = Cache.get(conn.params["slug"])
+    article = Blog.get_article  (conn.params["slug"])
 
     assign(conn, :meta_tags, %{
       "og:title" => article.title,
@@ -26,7 +27,7 @@ defmodule MwwPhoenixWeb.Plugs.AssignMetaTags do
   end
 
   defp assign_tags(conn, route) when route == MwwPhoenixWeb.ArticleLive.Index do
-    most_recent_article = Cache.most_recent()
+    most_recent_article = Blog.most_recent()
 
     assign(conn, :meta_tags, %{
       "og:title" => "mariovega.dev",
