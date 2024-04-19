@@ -63,6 +63,11 @@ if config_env() == :prod do
     ],
     secret_key_base: secret_key_base
 
+
+  config :mww_phoenix, :notion,
+    api_key: System.get_env("NOTION_API_KEY"),
+    database_id: System.get_env("NOTION_DATABASE_ID")
+
   # ## SSL Support
   #
   # To get SSL working, you will need to add the `https` key

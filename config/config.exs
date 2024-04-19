@@ -59,6 +59,12 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+# config :mww_phoenix, :notion,
+#   api_key: "secret_rAjO2xuOvyrN06MQrjF5fGbLPg88Af9HY4kFVEfXbDx",
+#   database_id: "30e73a3d-9949-430f-b2ff-dc6b74c5b88e"
+
+
+config :mww_phoenix, MwwPhoenix.ContentBuilder, source: :notion
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

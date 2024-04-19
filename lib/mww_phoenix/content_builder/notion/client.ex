@@ -24,7 +24,7 @@ defmodule MwwPhoenix.ContentBuilder.Notion.Client do
   end
 
   defp post(route, body) do
-    api_key = Application.fetch_env!(:mww_phoenix, :notion)[:api_key]
+    api_key = get_api_key()
 
     Req.post(
       "https://api.notion.com/v1/#{route}",
@@ -34,11 +34,15 @@ defmodule MwwPhoenix.ContentBuilder.Notion.Client do
   end
 
   defp get(route) do
-    api_key = Application.fetch_env!(:mww_phoenix, :notion)[:api_key]
+    api_key = get_api_key()
 
     Req.get(
       "https://api.notion.com/v1/#{route}",
       headers: [Authorization: "Bearer #{api_key}", "Notion-Version": "2022-06-28"]
     )
+  end
+
+  defp get_api_key() do
+    Application.fetch_env!(:mww_phoenix, :notion)[:api_key]
   end
 end
