@@ -4,7 +4,8 @@ defmodule MwwPhoenix.Blog do
   """
 
   import Ecto.Query, warn: false
-  alias MwwPhoenix.Blog.{Parser, Cache}
+  alias MwwPhoenix.ContentBuilder
+  alias MwwPhoenix.Blog.Cache
 
   @doc """
   Returns the list of articles.
@@ -16,8 +17,7 @@ defmodule MwwPhoenix.Blog do
 
   """
   def list_articles do
-    File.ls!(Application.app_dir(:mww_phoenix, "priv/content"))
-    |> Enum.map(&get_article!/1)
+    Cache.all()
   end
 
   def list_published_articles() do
@@ -26,8 +26,12 @@ defmodule MwwPhoenix.Blog do
     |> Enum.filter(&(&1.published == true))
   end
 
-  def get_article!(slug) do
-    Parser.parse_post!(slug)
+  def get_article(slug) do
+    Cache.get(slug)
+  end
+
+  def most_recent() do
+    Cache.most_recent()
   end
 
   def get_slug(article) do
@@ -35,6 +39,10 @@ defmodule MwwPhoenix.Blog do
     |> String.downcase()
     |> String.replace(",", "")
     |> String.replace(" ", "-")
+  end
+
+  def rebuild_content_cache() do
+    Cache.update_all(ContentBuilder.build())
   end
 
   def get_color_for_category(category) do

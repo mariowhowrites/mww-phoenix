@@ -77,3 +77,7 @@ config :phoenix, :plug_init_mode, :runtime
 
 # Disable swoosh api client as it is only required for production adapters.
 config :swoosh, :api_client, false
+
+config :mww_phoenix, MwwPhoenix.ContentBuilder, source: System.get_env("CONTENT_SOURCE") || :notion
+
+import_config("dev.secret.exs")

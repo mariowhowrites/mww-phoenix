@@ -2,7 +2,6 @@ defmodule MwwPhoenixWeb.ArticleLive.Index do
   use MwwPhoenixWeb, :live_view
 
   alias MwwPhoenix.Blog
-  alias MwwPhoenix.Blog.Article
 
   @impl true
   def mount(_params, _session, socket) do
@@ -38,6 +37,7 @@ defmodule MwwPhoenixWeb.ArticleLive.Index do
     |> assign(:article, nil)
   end
 
+  @impl true
   def handle_event("toggle_selected_category", %{"category" => category}, socket) do
     new_selected_category =
       if socket.assigns.selected_category != category, do: category, else: nil

@@ -52,7 +52,9 @@ defmodule MwwPhoenix.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:yaml_elixir, "~> 2.9.0"},
       {:earmark, "~> 1.4.39"},
-      {:xml_builder, "~> 2.1"}
+      {:xml_builder, "~> 2.1"},
+      {:req, "~> 0.3.0"},
+      {:html_entities, "~> 0.5"}
     ]
   end
 

@@ -35,3 +35,6 @@ mww_phoenix-*.tar
 npm-debug.log
 /assets/node_modules/
 
+/config/*.secret.exs
+
+.DS_Store
