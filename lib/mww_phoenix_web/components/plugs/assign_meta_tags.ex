@@ -14,7 +14,7 @@ defmodule MwwPhoenixWeb.Plugs.AssignMetaTags do
   end
 
   defp assign_tags(conn, route) when route == MwwPhoenixWeb.ArticleLive.Show do
-    article = Blog.get_article  (conn.params["slug"])
+    article = Blog.get_article(conn.params["slug"])
 
     assign(conn, :meta_tags, %{
       "og:title" => article.title,
