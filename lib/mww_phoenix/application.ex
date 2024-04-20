@@ -23,7 +23,10 @@ defmodule MwwPhoenix.Application do
       MwwPhoenixWeb.Endpoint,
       # Start a worker by calling: MwwPhoenix.Worker.start_link(arg)
       # {MwwPhoenix.Worker, arg},
-      {MwwPhoenix.Blog.Cache, content: ContentBuilder.build()}
+      {MwwPhoenix.Blog.Cache, content: ContentBuilder.build()},
+
+      # Start the cron job to rebuild the content cache
+      {MwwPhoenix.CronJobs.RebuildContentCache, []}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

@@ -63,12 +63,6 @@ defmodule MwwPhoenixWeb.ArticleLive.Index do
     }
   end
 
-  def handle_event("rebuild_content_cache", _params, socket) do
-    Blog.rebuild_content_cache()
-
-    {:noreply, socket}
-  end
-
   def blog_index_category_button(assigns) do
     color = Blog.get_color_for_category(assigns.category)
 

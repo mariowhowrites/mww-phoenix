@@ -20,13 +20,6 @@ defmodule MwwPhoenixWeb.ArticleLive.Show do
      }
   end
 
-  @impl true
-  def handle_event("rebuild_content_cache", _params, socket) do
-    Blog.rebuild_content_cache()
-
-    {:noreply, socket |> assign(:article, Blog.get_article(socket.assigns.slug))}
-  end
-
   def tag_class_string(article) do
     bg_color =
       article.category

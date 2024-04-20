@@ -19,9 +19,11 @@ defmodule MwwPhoenixWeb.Router do
     pipe_through [:browser, :assign_meta_tags]
 
     live "/", ArticleLive.Index, :index
+    live "/articles/:slug", ArticleLive.Show, :show
 
     get "/feed", RssController, :all
-    live "/articles/:slug", ArticleLive.Show, :show
+
+    get "/dev/_content_cache", ContentCacheController, :get
   end
 
   # Other scopes may use custom stacks.
