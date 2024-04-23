@@ -18,8 +18,8 @@ module.exports = {
         brand: "#FD4F00",
       },
       fontFamily: {
-        heading: ['Agrandir', ...defaultTheme.fontFamily.sans],
-        body: ['Telegraf', ...defaultTheme.fontFamily.sans],
+        heading: ['Gosha Sans', ...defaultTheme.fontFamily.sans],
+        body: ['Object Sans', ...defaultTheme.fontFamily.sans],
       },
     },
   },

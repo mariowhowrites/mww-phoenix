@@ -8,6 +8,8 @@ defmodule MwwPhoenixWeb.ArticleLive.Index do
     articles = Blog.list_published_articles()
     categories = Enum.map(articles, & &1.category) |> Enum.uniq()
 
+    
+
     {
       :ok,
       socket
