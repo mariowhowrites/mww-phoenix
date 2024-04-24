@@ -1,19 +1,36 @@
-<nav class="mb-12">
-  <.link
-    class="tracking-tight font-extrabold font-heading text-white sm:text-2xl"
-    navigate={~p"/"}
-  >
+<nav class="mb-12 ml-6 mt-6">
+  <.link class="tracking-tight font-extrabold font-heading sm:text-2xl" navigate={~p"/"}>
     mariovega.dev
   </.link>
 </nav>
+<section id="header-section" class="grid grid-cols-2 mx-6">
+  <div id="header-title-container">
+    <h1 class="text-6xl tracking-tight font-extrabold font-heading sm:text-6xl max-w-xl mx-auto">
+      <%= @article.title %>
+    </h1>
+  </div>
+  <div id="header-metadata-container" class="font-body">
+    <p>
+      <%= @article.category %>
+    </p>
+    <p>
+      Published <%= @article.date %>
+    </p>
+    <p class="mt-0 md:mt-3 text-xl">
+      <%= @article.description %>
+    </p>
+  </div>
+</section>
+<div class="flex items-center justify-center">
+  <img
+    class="h-auto object-contain mt-12 mb-8 mx-6"
+    src={@article.image}
+    sizes="(max-width: 1024px) 512px, 1024px"
+    alt={@article.title}
+  />
+</div>
 <div class="w-full md:w-2/3 mx-auto">
-  <h1 class="text-3xl tracking-tight font-extrabold font-heading text-white sm:text-4xl max-w-xl mx-auto">
-    <%= @article.title %>
-  </h1>
-  <p class="italic text-gray-500 mt-0 md:mt-3 max-w-xl mx-auto">
-    <%= @article.description %>
-  </p>
-  <aside class="my-6 flex flex-col md:flex-row max-w-xl mx-auto">
+  <%!-- <aside class="my-6 flex flex-col md:flex-row max-w-xl mx-auto">
     <div class="flex mb-2 md:md-0">
       <%= if @article.tags do %>
         <%= for tag <- @article.tags do %>
@@ -23,16 +40,12 @@
         <% end %>
       <% end %>
     </div>
-  </aside>
-  <%= article_image(assigns) %>
+  </aside> --%>
+
   <%!-- {
     article.decklist && <DecklistComponent decklist={article.decklist} />
   } --%>
-  <main
-    class="mww"
-    phx-hook="CodeHighlight"
-    id="article-content"
-  >
-    <%= raw @article.content %>
+  <main class="mww" phx-hook="CodeHighlight" id="article-content">
+    <%= raw(@article.content) %>
   </main>
 </div>

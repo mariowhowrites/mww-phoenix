@@ -10,7 +10,7 @@
 }
 
 .mww {
-    @apply font-body text-gray-300 text-lg;
+    @apply font-body text-lg;
 }
 
 .mww p {

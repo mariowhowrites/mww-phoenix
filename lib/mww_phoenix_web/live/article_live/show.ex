@@ -36,16 +36,4 @@ defmodule MwwPhoenixWeb.ArticleLive.Show do
       "Magic" -> "bg-amber-600"
     end
   end
-
-  def article_image(assigns) do
-    ~H"""
-    <img
-      class="h-124 w-full object-cover mb-8"
-      srcset={Article.srcset(@article)}
-      src={Article.desktop_image_url(@article)}
-      sizes="(max-width: 1024px) 512px, 1024px"
-      alt={@article.title}
-    />
-    """
-  end
 end
