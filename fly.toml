@@ -15,6 +15,10 @@ swap_size_mb = 512
   PHX_HOST = "mariovega.dev"
   PORT = "8080"
 
+[mounts]
+  source="mariowhowrites_images"
+  destination="priv/static/images"
+
 [http_service]
   internal_port = 8080
   force_https = true
