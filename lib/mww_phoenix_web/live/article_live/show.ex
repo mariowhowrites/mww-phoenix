@@ -2,7 +2,7 @@ defmodule MwwPhoenixWeb.ArticleLive.Show do
   use MwwPhoenixWeb, :live_view
 
   alias MwwPhoenix.Blog
-  alias MwwPhoenix.Blog.Article
+  alias MwwPhoenix.Image
 
   @impl true
   def mount(%{"slug" => slug}, _session, socket) do
@@ -41,9 +41,7 @@ defmodule MwwPhoenixWeb.ArticleLive.Show do
     ~H"""
     <img
       class="h-124 w-full object-cover mb-8"
-      srcset={Article.srcset(@article)}
-      src={Article.desktop_image_url(@article)}
-      sizes="(max-width: 1024px) 512px, 1024px"
+      src={Image.get_local_path_from_storage_path(@article.image)}
       alt={@article.title}
     />
     """

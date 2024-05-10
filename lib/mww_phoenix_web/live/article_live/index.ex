@@ -1,4 +1,5 @@
 defmodule MwwPhoenixWeb.ArticleLive.Index do
+  alias MwwPhoenix.Image
   use MwwPhoenixWeb, :live_view
 
   alias MwwPhoenix.Blog
@@ -118,20 +119,9 @@ defmodule MwwPhoenixWeb.ArticleLive.Index do
     <img
       fetchpriority={if @index < 2, do: "high", else: "low"}
       class="max-h-96 w-full object-cover"
-      srcset={srcset(@article)}
-      sizes="(max-width: 1024px) 512px, 1024px"
+      src={Image.get_local_path_from_storage_path(@article.image)}
       alt={@article.title}
     />
     """
-  end
-
-  defp srcset(article) do
-    image_name = Path.basename(article.image)
-
-    MwwPhoenix.ResponsiveImageGenerator.dimensions()
-    |> Enum.map(fn {device, width} ->
-      "/images/responsive/#{device}/#{image_name} #{width}w"
-    end)
-    |> Enum.join(", ")
   end
 end
