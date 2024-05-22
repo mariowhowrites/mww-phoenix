@@ -18,8 +18,10 @@ defmodule MwwPhoenixWeb.Router do
   scope "/", MwwPhoenixWeb do
     pipe_through [:browser, :assign_meta_tags]
 
-    live "/", ArticleLive.Index, :index
+    live "/", HomeLive.HomeLive, :index
+    live "/blog", ArticleLive.Index, :index
     live "/articles/:slug", ArticleLive.Show, :show
+    live "/about", AboutLive.AboutLive, :index, container: {:div, class: "h-full"}
 
     get "/feed", RssController, :all
 

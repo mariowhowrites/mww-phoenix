@@ -1,35 +1,52 @@
-<nav class="mb-12 ml-6 mt-6">
+<nav class="mb-12 mx-4 mt-4 flex justify-between">
   <.link class="tracking-tight font-extrabold font-heading sm:text-2xl" navigate={~p"/"}>
     mariovega.dev
   </.link>
+  <nav class="inline-flex items-center uppercase gap-4 font-heading">
+    <a href={~p"/blog"}>
+      Blog
+    </a>
+    <%!-- <svg viewBox="0 0 2 2" class="-ml-0.5 h-0.5 w-0.5 flex-none fill-black">
+        <circle cx="1" cy="1" r="1" />
+      </svg>
+      <a href="/">
+        Projects
+      </a> --%>
+    <svg viewBox="0 0 2 2" class="-ml-0.5 h-0.5 w-0.5 flex-none fill-black">
+      <circle cx="1" cy="1" r="1" />
+    </svg>
+    <a href={~p"/about"}>
+      About
+    </a>
+  </nav>
 </nav>
-<section id="header-section" class="grid grid-cols-2 mx-6">
-  <div id="header-title-container">
-    <h1 class="text-6xl tracking-tight font-extrabold font-heading sm:text-6xl max-w-xl mx-auto">
+<section id="header-section" class="flex flex-col gap-8 px-4 w-full md:w-2/3 md:mx-auto">
+  <div class="flex flex-col gap-2">
+    <h1 class="text-3xl md:text-6xl tracking-tight font-extrabold font-heading">
       <%= @article.title %>
     </h1>
+    <div>
+      <p class="text-lg md:text-2xl">
+        📘 <%= @article.category %>
+      </p>
+      <p class="text-lg md:text-2xl">
+        📆 <%= @article.date %>
+      </p>
+    </div>
   </div>
-  <div id="header-metadata-container" class="font-body">
-    <p>
-      <%= @article.category %>
-    </p>
-    <p>
-      Published <%= @article.date %>
-    </p>
-    <p class="mt-0 md:mt-3 text-xl">
-      <%= @article.description %>
-    </p>
-  </div>
+  <p class="text-xl">
+    <%= @article.description %>
+  </p>
 </section>
 <div class="flex items-center justify-center">
   <img
     class="h-auto object-contain mt-12 mb-8 mx-6"
-    src={@article.image}
+    src={Image.get_local_path_from_storage_path(@article.image)}
     sizes="(max-width: 1024px) 512px, 1024px"
     alt={@article.title}
   />
 </div>
-<div class="w-full md:w-2/3 mx-auto">
+<div class="w-full md:w-2/3 px-4 md:mx-auto">
   <%!-- <aside class="my-6 flex flex-col md:flex-row max-w-xl mx-auto">
     <div class="flex mb-2 md:md-0">
       <%= if @article.tags do %>

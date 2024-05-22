@@ -15,12 +15,12 @@ defmodule MwwPhoenix.ResponsiveImageGenerator do
   Then, we want to generate a responsive image for each image.
   Finally, we want to save the responsive image in the priv/static directory.
   """
-  def generate_responsive_images() do
-    # fetch all images in the priv/content directory
-    old_paths = get_content_images()
+  def generate_responsive_images(image_paths) do
+    # # fetch all images in the priv/content directory
+    # old_paths = get_content_images()
 
     # generate a responsive image for each image
-    Enum.each(old_paths, fn old_path ->
+    Enum.each(image_paths, fn old_path ->
       Enum.each(@dimensions, fn {device, width} ->
         image_name = Path.basename(old_path)
         new_path = Application.app_dir(:mww_phoenix, "priv/static/images/responsive/#{device}/#{image_name}")
