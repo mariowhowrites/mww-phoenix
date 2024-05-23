@@ -41,7 +41,13 @@
 <div class="flex items-center justify-center">
   <img
     class="h-auto object-contain mt-12 mb-8 mx-6"
-    src={Image.get_local_path_from_storage_path(@article.image)}
+    srcset={
+      Image.build_srcset(%Image{
+        storage_path: @article.image,
+        type: :cover_image,
+        name: Image.get_image_name_from_path(@article.image)
+      })
+    }
     sizes="(max-width: 1024px) 512px, 1024px"
     alt={@article.title}
   />

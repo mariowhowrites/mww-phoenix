@@ -28,8 +28,12 @@
       <div class="w-full md:w-1/2 pb-2 last:pb-0 pr-0 md:odd:pr-2 last:odd:w-full">
         <li class="relative isolate flex flex-col justify-end overflow-hidden bg-gray-900 h-full px-4 pb-8 pt-12 sm:pt-48">
           <img
-            src={Image.get_local_path_from_storage_path(article.image)}
-            alt=""
+            srcset={Image.build_srcset(%Image{
+                    storage_path: article.image,
+                    type: :cover_image,
+                    name: Image.get_image_name_from_path(article.image)
+                  })}
+            alt={article.title}
             class="absolute inset-0 -z-10 h-full w-full object-cover"
           />
           <div class="absolute inset-0 -z-10 bg-gradient-to-t from-gray-900 via-gray-900/60">

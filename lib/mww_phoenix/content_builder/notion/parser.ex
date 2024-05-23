@@ -1,9 +1,10 @@
 defmodule MwwPhoenix.ContentBuilder.Notion.Parser do
   alias MwwPhoenix.Image
+
   def parse_metadata(metadata) do
     slug = Enum.at(metadata.body["properties"]["Slug"]["rich_text"], 0)["text"]["content"]
     external_image_path = Enum.at(metadata.body["properties"]["Image"]["files"], 0)["file"]["url"]
-    {:ok, image} = Image.get_local_cover_image_url(external_image_path, slug)
+    {:ok, image} = Image.find_or_create(:cover_image, external_image_path, slug)
 
     %{
       category: Enum.at(metadata.body["properties"]["Category"]["multi_select"], 0)["name"],
@@ -51,7 +52,7 @@ defmodule MwwPhoenix.ContentBuilder.Notion.Parser do
   def parse_block!(:image, block, metadata) do
     external_url = block["image"]["file"]["url"]
 
-    {:ok, image} = Image.get_local_body_image_url(external_url, metadata.slug)
+    {:ok, image} = Image.find_or_create(:body_image, external_url, metadata.slug)
 
     "<img src=\"#{Image.get_local_path_from_storage_path(image.storage_path)}\" alt=\"#{Enum.at(block["image"]["caption"], 0)["plain_text"]}\">"
   end

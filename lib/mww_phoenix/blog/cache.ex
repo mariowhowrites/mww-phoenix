@@ -2,8 +2,8 @@ defmodule MwwPhoenix.Blog.Cache do
   use GenServer
   # client fns
 
-  def start_link(content: content) do
-    GenServer.start_link(__MODULE__, content, name: __MODULE__)
+  def start_link(content: content_fn) do
+    GenServer.start_link(__MODULE__, content_fn.(), name: __MODULE__)
   end
 
   def all() do

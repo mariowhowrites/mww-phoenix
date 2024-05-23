@@ -11,5 +11,7 @@ defmodule MwwPhoenix.ImageTest do
       assert String.contains?(Image.build_save_path_from_url({:cover_image, url}, slug), "priv/static/images/cover_images/some-slug/image.jpg")
       assert String.contains?(Image.build_save_path_from_url({:body_image, url}, slug), "priv/static/images/body_images/some-slug/image.jpg")
     end
+
+    
   end
 end

@@ -1,8 +1,6 @@
 defmodule MwwPhoenixWeb.ArticleLive.Index do
-  alias MwwPhoenix.Image
+  alias MwwPhoenix.{Blog, Image}
   use MwwPhoenixWeb, :live_view
-
-  alias MwwPhoenix.Blog
 
   @impl true
   def mount(_params, _session, socket) do
