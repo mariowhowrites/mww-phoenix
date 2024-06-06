@@ -45,4 +45,11 @@ defmodule MwwPhoenix.Blog.Article do
   def full_url(article) do
     "https://#{site_hostname()}/articles/#{article.slug}"
   end
+
+  def should_be_published?(article) do
+    Enum.any?(
+      Application.get_env(:mww_phoenix, :notion)[:published_keys],
+      &(Map.get(article, String.to_atom(&1)) == true)
+    )
+  end
 end

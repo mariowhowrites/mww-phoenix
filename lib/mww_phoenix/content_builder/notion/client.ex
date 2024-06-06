@@ -2,10 +2,19 @@ defmodule MwwPhoenix.ContentBuilder.Notion.Client do
   def get_published_articles_in_database(database_id) do
     post("databases/#{database_id}/query", %{
       filter: %{
-        property: "Published",
-        checkbox: %{
-          equals: true
-        }
+        or: [
+          %{
+            property: "Published",
+            checkbox: %{
+              equals: true
+            }
+          },
+          %{
+            property: "Published_dev",
+            checkbox: %{
+              equals: true
+            }
+          }]
       }
     })
   end

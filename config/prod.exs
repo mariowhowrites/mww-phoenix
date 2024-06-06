@@ -18,3 +18,6 @@ config :swoosh, api_client: Swoosh.ApiClient.Finch, finch_name: MwwPhoenix.Finch
 config :logger, level: :info
 # Runtime production configuration, including reading
 # of environment variables, is done on config/runtime.exs.
+
+config :mww_phoenix, :notion,
+  published_keys: ["published"]

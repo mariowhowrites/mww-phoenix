@@ -5,7 +5,7 @@ defmodule MwwPhoenix.ContentBuilder.Notion.Parser do
     slug = Enum.at(metadata.body["properties"]["Slug"]["rich_text"], 0)["text"]["content"]
     external_image_path = Enum.at(metadata.body["properties"]["Image"]["files"], 0)["file"]["url"]
     {:ok, image} = Image.find_or_create(:cover_image, external_image_path, slug)
-
+    
     %{
       category: Enum.at(metadata.body["properties"]["Category"]["multi_select"], 0)["name"],
       description:
@@ -14,6 +14,7 @@ defmodule MwwPhoenix.ContentBuilder.Notion.Parser do
       slug: slug,
       date: metadata.body["properties"]["Published On"]["date"]["start"],
       published: metadata.body["properties"]["Published"]["checkbox"],
+      published_dev: metadata.body["properties"]["Published_dev"]["checkbox"],
       image: image.storage_path,
       tags: []
     }
