@@ -7,15 +7,7 @@ defmodule MwwPhoenix.ContentBuilder.Notion do
 
     {:ok, res} = Client.get_published_articles_in_database(database_id)
 
-    cacheable_articles = Enum.map(res.body["results"], &parse_article!/1)
-
-    # cache all cover images here
-    # ResponsiveImageGenerator.generate_responsive_images(
-    #
-    # )
-    # cache all body images here
-
-    cacheable_articles
+    Enum.map(res.body["results"], &parse_article!/1)
   end
 
   defp parse_article!(page) do

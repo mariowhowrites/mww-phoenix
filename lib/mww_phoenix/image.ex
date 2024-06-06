@@ -62,7 +62,6 @@ defmodule MwwPhoenix.Image do
         case File.write(save_path, body) do
           :ok ->
             Logger.info("Image downloaded and saved successfully.")
-
             {:ok, save_path}
 
           error ->

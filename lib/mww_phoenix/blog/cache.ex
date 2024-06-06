@@ -1,6 +1,5 @@
 defmodule MwwPhoenix.Blog.Cache do
-  alias MwwPhoenix.Blog.Article
-  alias MwwPhoenix.Blog.Cache
+  alias MwwPhoenix.Blog.{Article, Cache}
   use GenServer
   # client fns
 

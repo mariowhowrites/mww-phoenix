@@ -4,9 +4,8 @@ defmodule MwwPhoenix.Blog do
   """
 
   import Ecto.Query, warn: false
-  alias MwwPhoenix.Blog.Article
+  alias MwwPhoenix.Blog.{Article, Cache}
   alias MwwPhoenix.ContentBuilder
-  alias MwwPhoenix.Blog.Cache
 
   @doc """
   Returns the list of articles.
