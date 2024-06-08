@@ -54,4 +54,9 @@ defmodule MwwPhoenix.Blog do
       _ -> "green"
     end
   end
+
+  def site_hostname() do
+    Application.get_env(:mww_phoenix, MwwPhoenixWeb.Endpoint)[:url][:host]
+  end
+
 end

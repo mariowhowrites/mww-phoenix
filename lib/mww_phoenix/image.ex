@@ -1,4 +1,5 @@
 defmodule MwwPhoenix.Image do
+  alias MwwPhoenix.Blog
   alias Task.Supervisor
   require Logger
 
@@ -107,6 +108,10 @@ defmodule MwwPhoenix.Image do
     [_, local_path] = String.split(storage_path, "priv/static")
 
     local_path
+  end
+
+  def full_url(storage_path) do
+    "https://#{Blog.site_hostname()}#{get_local_path_from_storage_path(storage_path)}"
   end
 
   def build_srcset(%MwwPhoenix.Image{} = image) do

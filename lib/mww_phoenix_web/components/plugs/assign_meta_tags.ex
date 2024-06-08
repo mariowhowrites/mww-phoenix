@@ -19,9 +19,12 @@ defmodule MwwPhoenixWeb.Plugs.AssignMetaTags do
     assign(conn, :meta_tags, %{
       "og:title" => article.title,
       "og:description" => article.description,
-      "og:image" => Image.get_local_path_from_storage_path(article.image),
+      "og:image" => Image.full_url(article.image),
       "og:url" => Article.full_url(article),
-      "twitter:card" => "summary_large_image",
+      "twitter:image" => Image.full_url(article.image),
+      "twitter:title" => article.title,
+      "twitter:card" => "summary",
+      "twitter:website" => "@mariowhowrites",
       "twitter:creator" => "@mariowhowrites"
     })
   end
