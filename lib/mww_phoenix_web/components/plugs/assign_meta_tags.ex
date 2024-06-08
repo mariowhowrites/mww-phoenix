@@ -1,6 +1,6 @@
 defmodule MwwPhoenixWeb.Plugs.AssignMetaTags do
   import Plug.Conn
-  alias MwwPhoenix.Blog
+  alias MwwPhoenix.{Blog,Image}
   alias MwwPhoenix.Blog.Article
 
   def assign_meta_tags(conn, _opts) do
@@ -19,9 +19,12 @@ defmodule MwwPhoenixWeb.Plugs.AssignMetaTags do
     assign(conn, :meta_tags, %{
       "og:title" => article.title,
       "og:description" => article.description,
-      "og:image" => article.image,
+      "og:image" => Image.full_url(article.image),
       "og:url" => Article.full_url(article),
-      "twitter:card" => "summary_large_image",
+      "twitter:image" => Image.full_url(article.image),
+      "twitter:title" => article.title,
+      "twitter:card" => "summary",
+      "twitter:website" => "@mariowhowrites",
       "twitter:creator" => "@mariowhowrites"
     })
   end
@@ -32,7 +35,7 @@ defmodule MwwPhoenixWeb.Plugs.AssignMetaTags do
     assign(conn, :meta_tags, %{
       "og:title" => "mariovega.dev",
       "og:description" => "A website with words about various subjects",
-      "og:image" => most_recent_article.image,
+      "og:image" => Image.get_local_path_from_storage_path(most_recent_article.image),
       "og:url" => "https://mariovega.dev",
       "twitter:card" => "summary",
       "twitter:creator" => "@mariowhowrites"

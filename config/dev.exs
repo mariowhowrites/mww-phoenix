@@ -80,4 +80,7 @@ config :swoosh, :api_client, false
 
 config :mww_phoenix, MwwPhoenix.ContentBuilder, source: System.get_env("CONTENT_SOURCE") || :notion
 
+config :mww_phoenix, :notion,
+  published_keys: ["published", "published_dev"]
+
 import_config("dev.secret.exs")

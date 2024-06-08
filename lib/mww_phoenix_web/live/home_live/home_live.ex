@@ -1,6 +1,8 @@
-defmodule MwwPhoenixWeb.ArticleLive.Index do
-  alias MwwPhoenix.{Blog, Image}
+defmodule MwwPhoenixWeb.HomeLive.HomeLive do
+  alias MwwPhoenix.Image
   use MwwPhoenixWeb, :live_view
+
+  alias MwwPhoenix.Blog
 
   @impl true
   def mount(_params, _session, socket) do
@@ -121,13 +123,5 @@ defmodule MwwPhoenixWeb.ArticleLive.Index do
       alt={@article.title}
     />
     """
-  end
-
-  def arrow_classes(category, selected_category) when category == selected_category do
-    "ml-2 transition-opacity duration-200"
-  end
-
-  def arrow_classes(category, _selected_category) do
-    "ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
   end
 end

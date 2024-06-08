@@ -4,8 +4,8 @@ defmodule MwwPhoenix.Blog do
   """
 
   import Ecto.Query, warn: false
+  alias MwwPhoenix.Blog.{Article, Cache}
   alias MwwPhoenix.ContentBuilder
-  alias MwwPhoenix.Blog.Cache
 
   @doc """
   Returns the list of articles.
@@ -23,7 +23,7 @@ defmodule MwwPhoenix.Blog do
   def list_published_articles() do
     Cache.all()
     |> Enum.sort_by(& &1.date, :desc)
-    |> Enum.filter(&(&1.published == true))
+    |> Enum.filter(&Article.should_be_published?/1)
   end
 
   def get_article(slug) do
@@ -54,4 +54,9 @@ defmodule MwwPhoenix.Blog do
       _ -> "green"
     end
   end
+
+  def site_hostname() do
+    Application.get_env(:mww_phoenix, MwwPhoenixWeb.Endpoint)[:url][:host]
+  end
+
 end

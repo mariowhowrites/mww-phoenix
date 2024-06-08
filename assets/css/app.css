@@ -3,9 +3,8 @@
 @import "tailwindcss/utilities";
 
 /* This file is for your main application CSS */
-
 .mww {
-    @apply font-body text-gray-300 text-lg;
+    @apply font-body text-lg;
 }
 
 .mww p {
@@ -49,69 +48,89 @@
 }
 
 @font-face {
-    font-family: "Agrandir";
+    font-family: "Gosha Sans";
     font-weight: 400;
-    src: url("/fonts/Agrandir-Regular.otf") format("opentype");
+    src: url("/fonts/GoshaSans-Regular.otf") format("opentype");
     font-display: swap;
 }
 
-
 @font-face {
-    font-family: "Agrandir";
+    font-family: "Gosha Sans";
     font-weight: 700;
-    src: url("/fonts/Agrandir-TextBold.otf") format("opentype");
+    src: url("/fonts/GoshaSans-Bold.otf") format("opentype");
     font-display: swap;
 }
 
 @font-face {
-    font-family: "Agrandir";
-    font-weight: 400;
-    font-style: italic;
-    src: url("/fonts/Agrandir-Italic.otf") format("opentype");
+    font-family: "Gosha Sans";
+    font-weight: 800;
+    src: url("/fonts/GoshaSans-Ultrabold.otf") format("opentype");
     font-display: swap;
 }
 
 @font-face {
-    font-family: "Telegraf";
-    font-weight: 400;
-    src: url("/fonts/Telegraf-Regular.otf") format("opentype");
+    font-family: "Gosha Sans";
+    font-weight: 200;
+    src: url("/fonts/GoshaSans-Ultralight.otf") format("opentype");
     font-display: swap;
 }
 
 @font-face {
-    font-family: "Telegraf";
+    font-family: "Object Sans";
     font-weight: 700;
-    src: url("/fonts/Telegraf-Bold.otf") format("opentype");
+    src: url("/fonts/ObjectSans-Bold.otf") format("opentype");
     font-display: swap;
 }
 
 @font-face {
-    font-family: "Neue Montreal";
-    font-weight: 400;
-    src: url("/fonts/NeueMontreal-Regular.otf") format("opentype");
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "Neue Montreal";
-    font-weight: 700;
-    src: url("/fonts/NeueMontreal-Bold.otf") format("opentype");
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "Neue Montreal";
-    font-weight: 400;
-    font-style: italic;
-    src: url("/fonts/NeueMontreal-Italic.otf") format("opentype");
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "Neue Montreal";
+    font-family: "Object Sans";
     font-weight: 700;
     font-style: italic;
-    src: url("/fonts/NeueMontreal-BoldItalic.otf") format("opentype");
+    src: url("/fonts/ObjectSans-BoldSlanted.otf") format("opentype");
     font-display: swap;
 }
 
+@font-face {
+    font-family: "Object Sans";
+    font-weight: 900;
+    src: url("/fonts/ObjectSans-Heavy.otf") format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Object Sans";
+    font-weight: 900;
+    font-style: italic;
+    src: url("/fonts/ObjectSans-HeavySlanted.otf") format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Object Sans";
+    font-weight: 400;
+    src: url("/fonts/ObjectSans-Regular.otf") format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Object Sans";
+    font-weight: 400;
+    font-style: italic;
+    src: url("/fonts/ObjectSans-Slanted.otf") format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Object Sans";
+    font-weight: 100;
+    src: url("/fonts/ObjectSans-Thin.otf") format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Object Sans";
+    font-weight: 100;
+    font-style: italic;
+    src: url("/fonts/ObjectSans-ThinSlanted.otf") format("opentype");
+    font-display: swap;
+}

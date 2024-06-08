@@ -1,6 +1,5 @@
 defmodule MwwPhoenix.ContentBuilder.Notion do
   use MwwPhoenixWeb, :controller
-  alias MwwPhoenix.Image
   alias MwwPhoenix.ContentBuilder.Notion.{Client, Parser}
 
   def build() do
@@ -13,9 +12,9 @@ defmodule MwwPhoenix.ContentBuilder.Notion do
 
   defp parse_article!(page) do
     {:ok, metadata} = Client.get_page_metadata(page["id"])
-    {:ok, res} = Client.get_page_content(page["id"]  )
+    {:ok, page_content} = Client.get_page_content(page["id"])
 
-    build_article_content(metadata, res.body["results"])
+    build_article_content(metadata, page_content.body["results"])
   end
 
   def build_article_content(metadata, all_blocks) do
