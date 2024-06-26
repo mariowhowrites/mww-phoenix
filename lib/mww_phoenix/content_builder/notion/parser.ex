@@ -1,16 +1,16 @@
 defmodule MwwPhoenix.ContentBuilder.Notion.Parser do
   alias MwwPhoenix.Image
 
-  def parse_metadata(metadata) do
-    slug = Enum.at(metadata.body["properties"]["Slug"]["rich_text"], 0)["text"]["content"]
+  def parse_metadata(%{:body => %{"properties" => properties}} = metadata) do
+    slug = get_text_property(properties, "Slug", "rich_text")
     external_image_path = Enum.at(metadata.body["properties"]["Image"]["files"], 0)["file"]["url"]
     {:ok, image} = Image.find_or_create(:cover_image, external_image_path, slug)
 
     %{
-      category: Enum.at(metadata.body["properties"]["Category"]["multi_select"], 0)["name"],
+      category: Enum.at(properties["Category"]["multi_select"], 0)["name"],
       description:
-        Enum.at(metadata.body["properties"]["Description"]["rich_text"], 0)["text"]["content"],
-      title: Enum.at(metadata.body["properties"]["Title"]["title"], 0)["text"]["content"],
+        get_text_property(properties, "Description", "rich_text"),
+      title: get_text_property(properties, "Title", "title"),
       slug: slug,
       date: metadata.body["properties"]["Published On"]["date"]["start"],
       published: metadata.body["properties"]["Published"]["checkbox"],
@@ -18,6 +18,13 @@ defmodule MwwPhoenix.ContentBuilder.Notion.Parser do
       image: image.storage_path,
       tags: []
     }
+  end
+
+  defp get_text_property(properties, key, type) do
+    properties[key][type]
+    |> Enum.at(0)
+    |> Map.get("text")
+    |> Map.get("content")
   end
 
   def parse_all_blocks!(all_blocks, metadata) do
@@ -99,6 +106,46 @@ defmodule MwwPhoenix.ContentBuilder.Notion.Parser do
     end
   end
 
+  def parse_block!(:to_do, block) do
+    "<p>" <> debug_print(block) <> "</p>"
+  end
+
+  def parse_block!(:table, block) do
+    "<p>" <> debug_print(block) <> "</p>"
+  end
+
+  def parse_block!(:toggle, block) do
+    "<p>" <> debug_print(block) <> "</p>"
+  end
+
+  def parse_block!(:quote, block) do
+    "<p>" <> debug_print(block) <> "</p>"
+  end
+
+  def parse_block!(:unsupported, block) do
+    "<p>Unsupported block type: #{block["type"]}</p>"
+  end
+
+  def parse_block!(:callout, block) do
+   "<p>" <> debug_print(block) <> "</p>"
+  end
+
+  def parse_block!(:bookmark, block) do
+   "<p>" <> debug_print(block) <> "</p>"
+  end
+
+  def parse_block!(:video, block) do
+   "<p>" <> debug_print(block) <> "</p>"
+  end
+
+  def parse_block!(:embed, block) do
+   "<p>" <> debug_print(block)   <> "</p>"
+  end
+
+  def parse_block!(:table_of_contents, block) do
+   "<p>" <> debug_print(block) <> "</p>"
+  end
+
   def parse_block!(block, index, all_blocks, metadata) do
     case block["type"] do
       "paragraph" -> parse_block!(:paragraph, block)
@@ -111,6 +158,16 @@ defmodule MwwPhoenix.ContentBuilder.Notion.Parser do
       "bulleted_list_item" -> parse_block!(:bulleted_list_item, block, index, all_blocks)
       "numbered_list_item" -> parse_block!(:numbered_list_item, block, index, all_blocks)
       "divider" -> parse_block!(:divider, block)
+      "to_do" -> parse_block!(:to_do, block)
+      "table" -> parse_block!(:table, block)
+      "toggle" -> parse_block!(:toggle, block)
+      "quote" -> parse_block!(:quote, block)
+      "unsupported" -> parse_block!(:unsupported, block)
+      "callout" -> parse_block!(:callout, block)
+      "bookmark" -> parse_block!(:bookmark, block)
+      "video" -> parse_block!(:video, block)
+      "embed" -> parse_block!(:embed, block)
+      "table_of_contents" -> parse_block!(:table_of_contents, block)
     end
   end
 
@@ -138,5 +195,9 @@ defmodule MwwPhoenix.ContentBuilder.Notion.Parser do
       end
 
     prefix <> rich_text_node["plain_text"] <> suffix
+  end
+
+  defp debug_print(block) do
+    Jason.encode!(block)
   end
 end

@@ -24,7 +24,7 @@ defmodule MwwPhoenix.ContentBuilder.Notion.Client do
     get("pages/#{page_id}")
   end
 
-  def get_page_content(page_id) do
+  def get_children(page_id) do
     get("blocks/#{page_id}/children")
   end
 
