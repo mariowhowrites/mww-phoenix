@@ -1,6 +1,5 @@
 defmodule MwwPhoenix.Notion.InterpreterTest do
-  alias MwwPhoenix.ContentBuilder.Notion.Article
-  alias MwwPhoenix.ContentBuilder.Notion.Interpreter
+  alias MwwPhoenix.ContentBuilder.Notion.{Article, Interpreter}
   use ExUnit.Case
 
   setup_all do

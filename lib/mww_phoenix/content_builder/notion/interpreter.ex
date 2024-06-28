@@ -2,7 +2,7 @@ defmodule MwwPhoenix.ContentBuilder.Notion.Interpreter do
   alias MwwPhoenix.Image
   alias MwwPhoenix.ContentBuilder.Notion.{Article, Block, Client}
 
-  def interpret_article!(%{"id" => id}) do
+  def interpret_article(%{"id" => id}) do
     {:ok, raw_metadata} = Client.get_page_metadata(id)
     {:ok, page_children} = Client.get_children(id)
 
@@ -30,17 +30,20 @@ defmodule MwwPhoenix.ContentBuilder.Notion.Interpreter do
   end
 
   def interpret_content(%Article{} = article, all_blocks) do
-    all_blocks
-    |> Enum.with_index()
-    |> Enum.map(fn {block, index} ->
-      interpret_block(
-        String.to_existing_atom(block["type"]),
-        block,
-        index: index,
-        all_blocks: all_blocks,
-        article: article
-      )
-    end)
+    {
+      article,
+      all_blocks
+      |> Enum.with_index()
+      |> Enum.map(fn {block, index} ->
+        interpret_block(
+          String.to_existing_atom(block["type"]),
+          block,
+          index: index,
+          all_blocks: all_blocks,
+          article: article
+        )
+      end)
+    }
   end
 
   def interpret_block(type, block, opts \\ [])
@@ -48,7 +51,7 @@ defmodule MwwPhoenix.ContentBuilder.Notion.Interpreter do
   def interpret_block(:paragraph, block, _opts) do
     %Block{
       type: :paragraph,
-      content: [parse_rich_text(block["paragraph"]["rich_text"])]
+      content: parse_rich_text(block["paragraph"]["rich_text"])
     }
   end
 
@@ -179,7 +182,7 @@ defmodule MwwPhoenix.ContentBuilder.Notion.Interpreter do
   def interpret_block(:quote, block, _opts) do
     %Block{
       type: :quote,
-      content: [parse_rich_text(block["quote"]["rich_text"])]
+      content: parse_rich_text(block["quote"]["rich_text"])
     }
   end
 
@@ -193,7 +196,7 @@ defmodule MwwPhoenix.ContentBuilder.Notion.Interpreter do
   def interpret_block(:callout, block, _opts) do
     %Block{
       type: :callout,
-      content: [parse_rich_text(block["callout"]["rich_text"])],
+      content: parse_rich_text(block["callout"]["rich_text"]),
       metadata: %{
         emoji: block["callout"]["icon"]["emoji"]
       }
@@ -264,10 +267,18 @@ defmodule MwwPhoenix.ContentBuilder.Notion.Interpreter do
         true -> :text
       end
 
-    %Block{
+    block = %Block{
       type: type,
       content: [rich_text_node["plain_text"]]
     }
+
+    case type do
+      :link ->
+        Map.put(block, :metadata, %{
+          url: rich_text_node["href"]
+        })
+      _ -> block
+    end
   end
 
   defp parse_block_children(raw_block, interpreted_block, opts) do
