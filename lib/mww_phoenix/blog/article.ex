@@ -6,6 +6,15 @@ defmodule MwwPhoenix.Blog.Article do
   schema "articles" do
     field :content, :string
     field :title, :string
+    field :description, :string
+    field :category, :string
+    field :slug, :string
+    field :image, :string
+    field :published, :boolean
+    field :published_dev, :boolean
+    field :date, :string
+    field :tags, {:array, :string}
+    field :notion_id, :string
 
     timestamps()
   end
@@ -13,8 +22,32 @@ defmodule MwwPhoenix.Blog.Article do
   @doc false
   def changeset(article, attrs) do
     article
-    |> cast(attrs, [:title, :content])
-    |> validate_required([:title, :content])
+    |> cast(Map.from_struct(attrs), [
+      :title,
+      :content,
+      :description,
+      :category,
+      :slug,
+      :image,
+      :published,
+      :published_dev,
+      :date,
+      :tags,
+      :notion_id
+    ])
+    |> validate_required([
+      :title,
+      :content,
+      :description,
+      :category,
+      :slug,
+      :image,
+      :published,
+      :published_dev,
+      :date,
+      :tags,
+      :notion_id
+    ])
   end
 
   def full_image_url(article) do

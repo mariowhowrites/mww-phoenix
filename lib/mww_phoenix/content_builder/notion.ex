@@ -1,14 +1,6 @@
 defmodule MwwPhoenix.ContentBuilder.Notion do
   use MwwPhoenixWeb, :controller
-  alias MwwPhoenix.ContentBuilder.Notion.{Client, Parser, Interpreter, Renderer}
-
-  # def build() do
-  #   database_id = Application.fetch_env!(:mww_phoenix, :notion)[:database_id]
-
-  #   {:ok, res} = Client.get_published_articles_in_database(database_id)
-
-  #   Enum.map(res.body["results"], &parse_article!/1)
-  # end
+  alias MwwPhoenix.ContentBuilder.Notion.{Client, Interpreter, Renderer}
 
   def build() do
     database_id = Application.fetch_env!(:mww_phoenix, :notion)[:database_id]
@@ -20,20 +12,61 @@ defmodule MwwPhoenix.ContentBuilder.Notion do
     |> Enum.map(&Renderer.render_article/1)
   end
 
-  defp parse_article!(%{"id" => id}) do
-    {:ok, metadata} = Client.get_page_metadata(id)
-    {:ok, page_content} = Client.get_children(id)
+  defmodule Block do
+    @derive Jason.Encoder
+    defstruct content: [], type: nil, metadata: %{}, children: []
 
-    build_article_content(metadata, page_content.body["results"])
+    @type t :: %__MODULE__{
+            content: list(String.t() | t()),
+            type: block_type(),
+            metadata: map(),
+            children: list(t())
+          }
+
+    @type block_type ::
+            :paragraph
+            | :heading_1
+            | :heading_2
+            | :heading_3
+            | :code
+            | :to_do
+            | :bulleted_list_item
+            | :table
+            | :toggle
+            | :quote
+            | :divider
+            | :child_page
+            | :unsupported
+            | :callout
+            | :image
+            | :bookmark
+            | :video
+            | :embed
+            | :table_of_contents
   end
 
-  def build_article_content(metadata, all_blocks) do
-    parsed_metadata = Parser.parse_metadata(metadata)
+  defmodule Article do
+    defstruct category: "",
+              description: "",
+              title: "",
+              slug: "",
+              date: nil,
+              published: false,
+              published_dev: false,
+              image: "",
+              tags: [],
+              content: [],
+              notion_id: ""
 
-    Map.put(
-      parsed_metadata,
-      :content,
-      Parser.parse_all_blocks!(all_blocks, parsed_metadata)
-    )
+    @type t :: %__MODULE__{
+            category: String.t(),
+            content: list(Block.t()),
+            image: String.t(),
+            slug: String.t(),
+            date: String.t(),
+            published: boolean(),
+            published_dev: boolean(),
+            tags: list(String.t())
+          }
   end
 end

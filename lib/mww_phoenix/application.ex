@@ -2,6 +2,7 @@ defmodule MwwPhoenix.Application do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
+  alias MwwPhoenix.Blog
   alias MwwPhoenix.ContentBuilder
 
   use Application
@@ -23,10 +24,11 @@ defmodule MwwPhoenix.Application do
       MwwPhoenixWeb.Endpoint,
       # Start a worker by calling: MwwPhoenix.Worker.start_link(arg)
       # {MwwPhoenix.Worker, arg},
-      {MwwPhoenix.Blog.Cache, content: fn -> ContentBuilder.build() end},
 
       # Start the cron job to rebuild the content cache
-      {MwwPhoenix.CronJobs.RebuildContentCache, []}
+      {MwwPhoenix.CronJobs.RebuildContentCache, []},
+
+      {Task, fn -> Blog.load_articles() end}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

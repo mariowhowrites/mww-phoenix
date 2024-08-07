@@ -2,6 +2,7 @@ defmodule MwwPhoenix.ContentBuilder.Notion.Interpreter do
   alias MwwPhoenix.Image
   alias MwwPhoenix.ContentBuilder.Notion.{Article, Block, Client}
 
+  @spec interpret_article(map()) :: {Article.t(), [Block.t()]}
   def interpret_article(%{"id" => id}) do
     {:ok, raw_metadata} = Client.get_page_metadata(id)
     {:ok, page_children} = Client.get_children(id)
@@ -11,12 +12,14 @@ defmodule MwwPhoenix.ContentBuilder.Notion.Interpreter do
     |> interpret_content(page_children.body["results"])
   end
 
-  def interpret_metadata(%{:body => %{"properties" => properties}} = metadata) do
+  @spec interpret_metadata(%{:body => %{}, optional(any()) => any()}) :: Article.t()
+  def interpret_metadata(%{:body => %{"properties" => properties, "id" => id}} = metadata) do
     slug = get_text_property(properties, "Slug", "rich_text")
     external_image_path = Enum.at(metadata.body["properties"]["Image"]["files"], 0)["file"]["url"]
     {:ok, image} = Image.find_or_create(:cover_image, external_image_path, slug)
 
     %Article{
+      notion_id: id,
       category: Enum.at(properties["Category"]["multi_select"], 0)["name"],
       description: get_text_property(properties, "Description", "rich_text"),
       title: get_text_property(properties, "Title", "title"),
@@ -29,6 +32,7 @@ defmodule MwwPhoenix.ContentBuilder.Notion.Interpreter do
     }
   end
 
+  @spec interpret_content(Article.t(), [map()]) :: {Article.t(), [Block.t()]}
   def interpret_content(%Article{} = article, all_blocks) do
     {
       article,
@@ -36,7 +40,6 @@ defmodule MwwPhoenix.ContentBuilder.Notion.Interpreter do
       |> Enum.with_index()
       |> Enum.map(fn {block, index} ->
         interpret_block(
-          String.to_existing_atom(block["type"]),
           block,
           index: index,
           all_blocks: all_blocks,
@@ -46,12 +49,23 @@ defmodule MwwPhoenix.ContentBuilder.Notion.Interpreter do
     }
   end
 
-  def interpret_block(type, block, opts \\ [])
+  @spec interpret_block(map(), Keyword.t()) :: Block.t()
+  def interpret_block(block, opts) do
+    interpret_block(
+      String.to_existing_atom(block["type"]),
+      block,
+      opts
+    )
+    |> interpret_block_children(block, opts)
+  end
 
-  def interpret_block(:paragraph, block, _opts) do
+  @spec interpret_block(Block.block_type(), map(), Keyword.t()) :: Block.t()
+  def interpret_block(type, block, opts)
+
+  def interpret_block(:paragraph, block, opts) do
     %Block{
       type: :paragraph,
-      content: parse_rich_text(block["paragraph"]["rich_text"])
+      content: parse_rich_text(block["paragraph"]["rich_text"], opts)
     }
   end
 
@@ -115,88 +129,81 @@ defmodule MwwPhoenix.ContentBuilder.Notion.Interpreter do
   end
 
   def interpret_block(:bulleted_list_item, block, opts) do
-    interpreted_block = %Block{
+    %Block{
       type: :bulleted_list_item,
-      content: parse_rich_text(block["bulleted_list_item"]["rich_text"])
+      content: parse_rich_text(block["bulleted_list_item"]["rich_text"], opts)
     }
-
-    if block["has_children"] do
-      parse_block_children(block, interpreted_block, opts)
-    else
-      interpreted_block
-    end
   end
 
   # we'll have to move most of this logic into the renderer
   def interpret_block(:numbered_list_item, block, opts) do
-    interpreted_block = %Block{
+    %Block{
       type: :numbered_list_item,
-      content: parse_rich_text(block["numbered_list_item"]["rich_text"])
+      content: parse_rich_text(block["numbered_list_item"]["rich_text"], opts)
     }
-
-    if block["has_children"] do
-      parse_block_children(block, interpreted_block, opts)
-    else
-      interpreted_block
-    end
   end
 
   def interpret_block(:to_do, block, opts) do
-    interpreted_block = %Block{
+    %Block{
       type: :to_do,
-      content: parse_rich_text(block["to_do"]["rich_text"]),
+      content: parse_rich_text(block["to_do"]["rich_text"], opts),
       metadata: %{
         checked: block["to_do"]["checked"]
       }
     }
-
-    if block["has_children"] do
-      parse_block_children(block, interpreted_block, opts)
-    else
-      interpreted_block
-    end
   end
 
   # will need to be handled recursively
   def interpret_block(:table, block, _opts) do
+    IO.inspect(block)
+
     %Block{
       type: :table,
-      content: []
+      content: [],
+      metadata: %{
+        has_column_header: block["table"]["has_column_header"]
+      }
     }
   end
 
+  def interpret_block(:table_row, block, opts) do
+    %Block{
+      type: :table_row,
+      content: Enum.map(block["table_row"]["cells"], fn cell ->
+        [text_node] = cell
+
+        interpret_block(text_node, opts)
+      end)
+    }
+  end
+
+
   # also need recursive
-  def interpret_block(:toggle, block, opts) do
-    interpreted_block = %Block{
+  def interpret_block(:toggle, _block, _opts) do
+    %Block{
       type: :toggle,
       content: []
     }
-
-    if block["has_children"] do
-      parse_block_children(block, interpreted_block, opts)
-    else
-      interpreted_block
-    end
   end
 
-  def interpret_block(:quote, block, _opts) do
+  def interpret_block(:quote, block, opts) do
     %Block{
       type: :quote,
-      content: parse_rich_text(block["quote"]["rich_text"])
+      content: parse_rich_text(block["quote"]["rich_text"], opts)
     }
   end
 
-  def interpret_block(:unsupported, block, _opts) do
+  def interpret_block(:unsupported, _block, _opts) do
     %Block{
       type: :unsupported,
       content: []
     }
   end
 
-  def interpret_block(:callout, block, _opts) do
+  def interpret_block(:callout, block, opts) do
     %Block{
       type: :callout,
-      content: parse_rich_text(block["callout"]["rich_text"]),
+      content: parse_rich_text(block["callout"]["rich_text"], opts),
       metadata: %{
         emoji: block["callout"]["icon"]["emoji"]
       }
@@ -242,6 +249,30 @@ defmodule MwwPhoenix.ContentBuilder.Notion.Interpreter do
     }
   end
 
+  def interpret_block(:text, block, _opts) do
+    %Block{
+      type: :text,
+      content: [block["plain_text"]]
+    }
+  end
+
+  def interpret_block(:link, block, _opts) do
+    %Block{
+      type: :link,
+      content: [block["plain_text"]],
+      metadata: %{
+        url: block["href"]
+      }
+    }
+  end
+
+  def interpret_block(:inline_code, block, _opts) do
+    %Block{
+      type: :inline_code,
+      content: [block["plain_text"]]
+    }
+  end
+
   # helpers fns
 
   defp get_text_property(properties, key, type) do
@@ -251,50 +282,43 @@ defmodule MwwPhoenix.ContentBuilder.Notion.Interpreter do
     |> Map.get("content")
   end
 
-  def parse_rich_text(text) do
+  def parse_rich_text(text, opts) do
     cond do
-      is_list(text) -> Enum.map(text, &parse_rich_text_node/1)
-      is_map(text) -> parse_rich_text_node(text)
+      is_list(text) -> Enum.map(text, &parse_rich_text_block(&1, opts))
+      is_map(text) -> parse_rich_text_block(text, opts)
       true -> ""
     end
   end
 
-  def parse_rich_text_node(rich_text_node) do
+  def parse_rich_text_block(block, opts) do
     type =
       cond do
-        rich_text_node["annotations"]["code"] == true -> :inline_code
-        rich_text_node["href"] != nil -> :link
+        block["annotations"]["code"] == true -> :inline_code
+        block["href"] != nil -> :link
         true -> :text
       end
 
-    block = %Block{
-      type: type,
-      content: [rich_text_node["plain_text"]]
-    }
-
-    case type do
-      :link ->
-        Map.put(block, :metadata, %{
-          url: rich_text_node["href"]
-        })
-      _ -> block
-    end
+    interpret_block(type, block, opts)
   end
 
-  defp parse_block_children(raw_block, interpreted_block, opts) do
+  defp interpret_block_children(interpreted_block, %{"has_children" => true} = raw_block, opts) do
     {:ok, res} = Client.get_children(raw_block["id"])
     block_children = res.body["results"]
 
-    interpreted_children =
+    Map.put(
+      interpreted_block,
+      :children,
       Enum.map(
         block_children,
-        &interpret_block(String.to_existing_atom(&1["type"]), &1, opts)
+        &interpret_block(
+          &1,
+          opts
+        )
       )
-
-    Map.put(interpreted_block, :children, interpreted_children)
+    )
   end
 
-  defp debug_print(block) do
-    Jason.encode!(block)
+  defp interpret_block_children(interpreted_block, _raw_block, _opts) do
+    interpreted_block
   end
 end

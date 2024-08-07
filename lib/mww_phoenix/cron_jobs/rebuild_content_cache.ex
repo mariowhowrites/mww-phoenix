@@ -19,7 +19,7 @@ defmodule MwwPhoenix.CronJobs.RebuildContentCache do
   end
 
   def handle_info(:work, state) do
-    Blog.rebuild_content_cache()
+    Blog.load_articles()
 
     schedule_work()
 

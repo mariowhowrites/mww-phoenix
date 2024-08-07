@@ -5,7 +5,7 @@ defmodule MwwPhoenixWeb.ContentCacheController do
 
   def get(conn, _assigns) do
     # Rebuild the content cache here
-    Blog.rebuild_content_cache()
+    Blog.load_articles()
 
     # Redirect the user to their previous URL location
     redirect(conn, to: get_previous_url(conn))

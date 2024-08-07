@@ -5,6 +5,6 @@ defmodule Mix.Tasks.Cache.Refresh do
 
   @impl Mix.Task
   def run(_args) do
-    MwwPhoenix.Blog.Cache.update_all(MwwPhoenix.ContentBuilder.build())
+    MwwPhoenix.Blog.load_articles()
   end
 end

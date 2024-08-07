@@ -1,124 +1,132 @@
 defmodule MwwPhoenix.ContentBuilder.Notion.Renderer do
-  alias MwwPhoenix.ContentBuilder.Notion.Block
+  alias MwwPhoenix.ContentBuilder.Notion.{Article, Block}
 
-  @groupable_types [:bulleted_list_item, :numbered_list_item]
+  @groupable_types [:bulleted_list_item, :numbered_list_item, :to_do]
 
+  @spec render_article({Article.t(), [Block.t()]}) :: Article.t()
   def render_article({article, all_blocks}) do
-    rendered_content = render_blocks(all_blocks, article)
-
-    Map.put(article, :content, rendered_content)
+    Map.put(article, :content, render_blocks(all_blocks))
   end
 
-  def render_blocks(all_blocks, article) do
-    all_blocks
+  @spec render_blocks(Block.t() | [Block.t()]) :: String.t()
+  def render_blocks(block_or_blocks)
+
+  def render_blocks(all_blocks) do
+    List.wrap(all_blocks)
     |> group_blocks()
     |> Enum.map(fn block_group ->
-      render_group(block_group, article: article, all_blocks: all_blocks)
+      render_group(block_group)
     end)
+    |> Enum.join()
   end
 
+  @spec group_blocks([Block.t()]) :: [[Block.t()]]
   def group_blocks(all_blocks) do
     Enum.chunk_while(
       all_blocks,
       [],
+      &chunk_block/2,
       fn
-        %Block{type: type} = block, acc when type in @groupable_types ->
-          # if the type of the block matches the type of the first element of acc, add element to acc and return
-          if Enum.at(acc, 0).type == type do
-            {:cont, acc ++ [block]}
-          else
-            {:cont, [block]}
-          end
-
-        block, [] ->
-          {:cont, [block]}
-
-        block, acc ->
-          {:cont, acc, [block]}
-      end,
-      fn acc -> {:cont, acc} end
+        [] -> {:cont, []}
+        chunk -> {:cont, chunk, []}
+      end
     )
   end
 
-  def render_group(blocks, opts) when length(blocks) == 1 do
-    render_block(Enum.at(blocks, 0), opts)
-  end
-
-  def render_group(blocks, opts) when length(blocks) > 1 do
-    [prefix, suffix] =
-      cond do
-        Enum.at(blocks, 0).type == :bulleted_list_item -> ["<ul>", "</ul>"]
-        Enum.at(blocks, 0).type == :numbered_list_item -> ["<ol>", "</ol>"]
+  defp chunk_block(%Block{type: type} = block, acc) when type in @groupable_types do
+    if length(acc) == 0 do
+      {:cont, [block]}
+    else
+      if Enum.at(acc, 0).type == type do
+        {:cont, acc ++ [block]}
+      else
+        {:cont, acc, [block]}
       end
-
-    ([prefix] ++ Enum.map(blocks, &render_block(&1, opts)) ++ [suffix]) |> Enum.join("")
+    end
   end
 
-  def render_block(block, opts \\ [])
-
-  def render_block(%Block{} = block, opts) when block.type == :paragraph do
-    (["<p>"] ++ render_content(block.content, opts) ++ ["</p>"])
-    |> Enum.join("")
+  defp chunk_block(block, [] = _acc) do
+    {:cont, [block]}
   end
 
-  def render_block(%Block{} = block, opts) when block.type == :text do
-    block.content |> Enum.join("")
+  defp chunk_block(block, acc) do
+    {:cont, acc, [block]}
   end
 
-  def render_block(%Block{} = block, opts) when block.type == :heading_1 do
-    (["<h1>"] ++ block.content ++ ["</h1>"])
-    |> Enum.join("")
-  end
+  @spec render_group([Block.t()]) :: String.t()
+  def render_group(blocks)
 
-  def render_block(%Block{} = block, opts) when block.type == :heading_2 do
-    (["<h2>"] ++ block.content ++ ["</h2>"])
-    |> Enum.join("")
-  end
-
-  def render_block(%Block{} = block, opts) when block.type == :heading_3 do
-    (["<h3>"] ++ block.content ++ ["</h3>"])
-    |> Enum.join("")
-  end
-
-  # render_block for image type
-  def render_block(%Block{} = block, opts) when block.type == :image do
-    [image_path] = block.content
-
-    "<img src=\"#{image_path}\" alt=\"#{block.metadata.caption}\">"
-  end
-
-  def render_block(%Block{} = block, opts) when block.type == :inline_code do
-    (["<code class=\"inline\">"] ++ block.content ++ ["</pre>"])
-    |> Enum.join("")
-  end
-
-  def render_block(%Block{} = block, opts) when block.type == :code do
-    [code] = block.content
-
-    (["<pre><code class=\"hljs language-#{block.metadata.language}\">"] ++
-       [HtmlEntities.encode(code)] ++ ["</code></pre>"])
-    |> Enum.join("")
-  end
-
-  def render_block(%Block{} = block, opts) when block.type == :image do
-    [image_path] = block.content
-
-    "<img src=\"#{image_path}\" alt=\"#{block.caption}\">"
-  end
-
-  def render_block(%Block{} = block, opts) when block.type == :child_page do
+  def render_group(blocks) when length(blocks) == 0 do
     ""
   end
 
-  def render_block(%Block{} = block, opts) when block.type == :divider do
+  def render_group(blocks) do
+    [prefix, suffix] =
+      case Enum.at(blocks, 0).type do
+        :bulleted_list_item -> ["<ul>", "</ul>"]
+        :numbered_list_item -> ["<ol>", "</ol>"]
+        :to_do -> ["<div class=\"todo-wrapper\">", "</div>"]
+        _ -> ["", ""]
+      end
+
+    ([prefix] ++ Enum.map(blocks, &render_block/1) ++ [suffix]) |> Enum.join()
+  end
+
+  @spec render_block(Block.t()) :: String.t()
+  def render_block(block)
+
+  def render_block(%Block{type: :paragraph, content: content}) do
+    (["<p>"] ++ Enum.map(content, &render_block/1) ++ ["</p>"])
+    |> Enum.join()
+  end
+
+  def render_block(%Block{type: :text, content: content}) do
+    content |> Enum.join()
+  end
+
+  def render_block(%Block{type: :heading_1, content: content}) do
+    (["<h1>"] ++ content ++ ["</h1>"])
+    |> Enum.join()
+  end
+
+  def render_block(%Block{type: :heading_2, content: content}) do
+    (["<h2>"] ++ content ++ ["</h2>"])
+    |> Enum.join()
+  end
+
+  def render_block(%Block{type: :heading_3, content: content}) do
+    (["<h3>"] ++ content ++ ["</h3>"])
+    |> Enum.join()
+  end
+
+  def render_block(%Block{type: :image, content: [image_path], metadata: %{caption: caption}}) do
+    "<img src=\"#{image_path}\" alt=\"#{caption}\">"
+  end
+
+  def render_block(%Block{type: :inline_code, content: content}) do
+    (["<code class=\"inline\">"] ++ content ++ ["</code>"])
+    |> Enum.join()
+  end
+
+  def render_block(%Block{type: :code, content: [code], metadata: %{language: language}}) do
+    (["<pre><code class=\"hljs language-#{language}\">"] ++
+       [HtmlEntities.encode(code)] ++ ["</code></pre>"])
+    |> Enum.join()
+  end
+
+  def render_block(%Block{type: :child_page}) do
+    ""
+  end
+
+  def render_block(%Block{type: :divider}) do
     "<hr>"
   end
 
-  def render_block(%Block{} = block, opts) when block.type == :video do
+  def render_block(%Block{type: :video, metadata: %{video_id: video_id}}) do
     "<iframe
       width=\"560\"
       height=\"315\"
-      src=\"https://www.youtube-nocookie.com/embed/#{block.metadata.video_id}\"
+      src=\"https://www.youtube-nocookie.com/embed/#{video_id}\"
       title=\"YouTube video player\"
       frameborder=\"0\"
       allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\"
@@ -126,87 +134,104 @@ defmodule MwwPhoenix.ContentBuilder.Notion.Renderer do
       allowfullscreen></iframe>"
   end
 
-  # render_block for to_do type, should handle recursive case in case of nested todo lists
-  def render_block(%Block{} = block, opts) when block.type == :to_do do
-    content = render_content(block.content, opts)
+  def render_block(%Block{type: :to_do, content: content, children: children, metadata: %{checked: checked}}) do
+    rendered_content = Enum.map(content, &render_block/1) |> Enum.join()
 
-    if block.metadata.checked do
-      "<input type=\"checkbox\" checked disabled> #{content}"
-    else
-      "<input type=\"checkbox\" disabled> #{content}"
-    end
+    checkbox =
+      if checked do
+        "<input type=\"checkbox\" checked disabled>"
+      else
+        "<input type=\"checkbox\" disabled>"
+      end
+
+    to_do_item = "<div class=\"to-do\">
+      <div class=\"checkbox\">#{checkbox}</div>
+      <div class=\"content\">#{rendered_content}</div>
+    </div>"
+
+    child_content = render_blocks(children)
+
+    (List.wrap(to_do_item) ++ List.wrap(child_content)) |> Enum.join()
   end
 
-  # render_block for bulleted_list_item
-  def render_block(%Block{} = block, opts) when block.type in @groupable_types do
-    # list_item = ["<li>"] ++ render_content(block.content, opts) ++ ["</li>"]
+  def render_block(%Block{type: type, content: content, children: children})
+      when type in @groupable_types do
+    prefix = ["<li>"]
+    suffix = ["</li>"]
+    block_content = Enum.map(content, &render_block/1)
+    child_content = render_blocks(children)
 
-    # index = opts[:index]
-    # all_blocks = opts[:all_blocks]
-
-    # list_item =
-    #   cond do
-    #     index > 0 and Enum.at(all_blocks, index - 1).type != :bulleted_list_item ->
-    #       ["<ul>"] ++ list_item
-
-    #     index < length(all_blocks) - 1 and
-    #         Enum.at(all_blocks, index + 1).type != :bulleted_list_item ->
-    #       list_item ++ ["</ul>"]
-
-    #     true ->
-    #       list_item
-    #   end
-
-    # (list_item ++ render_content(block.children, opts)) |> Enum.join("")
-    (["<li>"] ++ render_content(block.content, opts) ++ ["</li>"]) |> Enum.join("")
+    (prefix ++ block_content ++ suffix ++ List.wrap(child_content)) |> Enum.join()
   end
 
-  # render_block for table. atm this isn't a high priority so let's just return nothing
-  def render_block(%Block{} = block, opts) when block.type == :table do
+  def render_block(%Block{
+        type: :table,
+        children: table_rows,
+        metadata: %{has_column_header: has_column_header}
+      }) do
+    prefix = ["<table>"]
+    suffix = ["</table>"]
+
+    table_content =
+      case has_column_header do
+        true ->
+          [header_row | body_rows] = table_rows
+
+          header = ["<thead>"] ++ (header_row |> render_blocks() |> List.wrap()) ++ ["</thead>"]
+
+          body = ["<tbody>"] ++ (body_rows |> render_blocks() |> List.wrap()) ++ ["</tbody>"]
+
+          header ++ body
+
+        false ->
+          ["<tbody>"] ++ (table_rows |> render_blocks() |> List.wrap()) ++ ["</tbody>"]
+      end
+
+    (prefix ++ table_content ++ suffix) |> Enum.join()
+  end
+
+  def render_block(%Block{type: :table_row, content: content}) do
+    (["<tr>"] ++
+       Enum.map(content, fn cell ->
+         (["<td>"] ++ (cell |> render_block() |> List.wrap()) ++ ["</td>"]) |> Enum.join()
+       end) ++
+       ["</tr>"])
+    |> Enum.join()
+  end
+
+  def render_block(%Block{type: :toggle}) do
     ""
   end
 
-  # render_block for toggles. this needs JS to work effectively, so for now let's also return nothing
-  def render_block(%Block{} = block, opts) when block.type == :toggle do
+  def render_block(%Block{type: :quote, content: content}) do
+    "<blockquote>#{Enum.map(content, &render_block/1) |> Enum.join()}</blockquote>"
+  end
+
+  def render_block(%Block{type: :unsupported}) do
     ""
   end
 
-  # render_block for quote
-  def render_block(%Block{} = block, opts) when block.type == :quote do
-    "<blockquote>#{render_content(block.content, opts)}</blockquote>"
-  end
-
-  # render_block for unsupported
-  def render_block(%Block{} = block, opts) when block.type == :unsupported do
-    ""
-  end
-
-  # render_block for callout
-  def render_block(%Block{} = block, opts) when block.type == :callout do
+  def render_block(%Block{type: :callout, content: content, metadata: %{emoji: emoji}}) do
     "<aside class=\"callout\">
-      <div>#{block.metadata.emoji}</div>
-      <div>#{render_content(block.content, opts)}</div>
+      <div>#{emoji}</div>
+      <div>#{Enum.map(content, &render_block/1) |> Enum.join()}</div>
     </aside>"
   end
 
-  # render_block for bookmark. let's just use a link for now and revisit this later
-  def render_block(%Block{} = block, opts) when block.type == :bookmark do
-    "<a href=\"#{block.metadata.url}\">#{block.content}</a>"
-  end
-
-  def render_block(%Block{} = block, opts) when block.type == :embed do
+  def render_block(%Block{type: :bookmark, content: _content, metadata: %{url: _url}}) do
+    # "<a href=\"#{url}\">#{content}</a>"
     ""
   end
 
-  def render_block(%Block{} = block, opts) when block.type == :table_of_contents do
+  def render_block(%Block{type: :embed}) do
     ""
   end
 
-  def render_block(%Block{} = block, opts) when block.type == :link do
-    "<a href=\"#{block.metadata.url}\">#{hd(block.content)}</a>"
+  def render_block(%Block{type: :table_of_contents}) do
+    ""
   end
 
-  defp render_content(content, opts) do
-    Enum.map(content, &render_block(&1, opts))
+  def render_block(%Block{type: :link, content: [content], metadata: %{url: url}}) do
+    "<a href=\"#{url}\">#{content}</a>"
   end
 end

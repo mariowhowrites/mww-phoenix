@@ -8,7 +8,7 @@
 }
 
 .mww p {
-    @apply mb-4 max-w-xl mx-auto;
+    @apply mb-4 text-xl;
 }
 
 .mww a {
@@ -16,7 +16,7 @@
 }
 
 .mww h1, .mww h2, .mww h3, .mww h4, .mww h5, .mww h6 {
-    @apply max-w-xl mx-auto font-heading;
+    @apply font-heading;
 }
 
 .mww h2 {
@@ -28,7 +28,7 @@
 }
 
 .mww ul, .mww ol {
-    @apply max-w-xl mx-auto list-outside pl-4 mb-4;
+    @apply list-outside ml-8 mb-4;
 }
 
 .mww li {
@@ -45,6 +45,35 @@
 
 .mww pre {
     @apply mb-4;
+}
+
+.mww .todo-wrapper {
+    @apply flex flex-col gap-2;
+}
+
+.mww blockquote {
+    @apply pl-4 border-l-4 border-gray-300 italic;
+}
+
+.mww .callout {
+    @apply flex gap-2 bg-gray-200 items-center my-4 p-2;
+}
+
+.mww hr {
+    @apply my-8 border-t-2 border-gray-300;
+
+}
+
+.mww .to-do {
+    @apply flex mb-2 pl-2;
+}
+
+.mww .to-do .checkbox {
+    @apply mr-2;
+}
+
+.mww .todo-wrapper .todo-wrapper {
+    @apply ml-8;
 }
 
 @font-face {

@@ -30,7 +30,7 @@ defmodule MwwPhoenixWeb.Plugs.AssignMetaTags do
   end
 
   defp assign_tags(conn, route) when route == MwwPhoenixWeb.ArticleLive.Index do
-    most_recent_article = Blog.most_recent()
+    [most_recent_article] = Blog.most_recent()
 
     assign(conn, :meta_tags, %{
       "og:title" => "mariovega.dev",
