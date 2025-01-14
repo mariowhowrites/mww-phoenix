@@ -3,12 +3,14 @@ defmodule MwwPhoenix.Application do
   # for more information on OTP Applications
   @moduledoc false
   alias MwwPhoenix.Blog
-  alias MwwPhoenix.ContentBuilder
+  require Logger
 
   use Application
 
   @impl true
   def start(_type, _args) do
+    verify_volume()
+
     children = [
       # Start the Telemetry supervisor
       MwwPhoenixWeb.Telemetry,
@@ -27,7 +29,6 @@ defmodule MwwPhoenix.Application do
 
       # Start the cron job to rebuild the content cache
       {MwwPhoenix.CronJobs.RebuildContentCache, []},
-
       {Task, fn -> Blog.load_articles() end}
     ]
 
@@ -43,5 +44,17 @@ defmodule MwwPhoenix.Application do
   def config_change(changed, _new, removed) do
     MwwPhoenixWeb.Endpoint.config_change(changed, removed)
     :ok
+  end
+
+  def verify_volume do
+    test_path = "priv/static/images/test.txt"
+
+    case File.write(test_path, "test #{DateTime.utc_now()}") do
+      :ok ->
+        Logger.info("Successfully wrote to volume at #{test_path}")
+
+      {:error, reason} ->
+        Logger.error("Failed to write to volume: #{inspect(reason)}")
+    end
   end
 end

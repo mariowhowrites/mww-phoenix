@@ -58,24 +58,28 @@ defmodule MwwPhoenix.Image do
   end
 
   defp download_from_url(url, save_path, get_fn \\ &Req.get/1) do
+    Logger.info("Attempting to download image from #{url} to #{save_path}")
+
     case get_fn.(url) do
       {:ok, %Req.Response{status: 200, body: body}} ->
+        Logger.info("Download successful, file size: #{byte_size(body)} bytes")
+
         case File.write(save_path, body) do
           :ok ->
-            Logger.info("Image downloaded and saved successfully.")
+            Logger.info("Image saved successfully to #{save_path}")
             {:ok, save_path}
 
           error ->
-            Logger.error("Failed to save the image: #{inspect(error)}")
+            Logger.error("Failed to save image: #{inspect(error)}\nPath: #{save_path}\nPermissions: #{inspect(File.stat(Path.dirname(save_path)))}")
             {:error, "Failed to save the image"}
         end
 
       {:ok, %Req.Response{status: status_code}} ->
-        Logger.error("Failed to download the image. Status code: #{status_code}")
+        Logger.error("Download failed with status #{status_code} for URL: #{url}")
         {:error, "Failed to download the image"}
 
       {:error, error} ->
-        Logger.error("Failed to download the image: #{inspect(error)}")
+        Logger.error("Download error: #{inspect(error)}\nURL: #{url}")
         {:error, "Failed to download the image"}
     end
   end

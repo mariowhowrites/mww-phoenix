@@ -9,11 +9,21 @@
     </.live_title>
     <%!-- add meta tags for SEO accessibility --%>
     <%= for {tag, value} <- @conn.assigns[:meta_tags] do %>
-          <meta property={tag} content={value} />
+      <%= if String.contains?(tag, "twitter") do %>
+        <meta name={tag} content={value} />
+      <% else %>  
+        <meta property={tag} content={value} />
+      <% end %>
     <% end %>
-    <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"}>
-    <link media="print" onload="this.media = 'all'" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/an-old-hope.min.css">
-    <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}></script>
+    <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
+    <link
+      media="print"
+      onload="this.media = 'all'"
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/an-old-hope.min.css"
+    />
+    <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
+    </script>
   </head>
   <body class="bg-orange-100 antialiased h-full min-h-screen">
     <%= @inner_content %>

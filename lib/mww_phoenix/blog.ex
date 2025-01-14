@@ -4,7 +4,7 @@ defmodule MwwPhoenix.Blog do
   """
 
   import Ecto.Query, warn: false
-  alias MwwPhoenix.Blog.{Article, Cache}
+  alias MwwPhoenix.Blog.Article
   alias MwwPhoenix.{ContentBuilder, Repo}
 
   @doc """
@@ -27,7 +27,7 @@ defmodule MwwPhoenix.Blog do
   # end
 
   def list_published_articles() do
-    Repo.all(from(a in Article))
+    Repo.all(from(a in Article)) |> Enum.filter(&Article.should_be_published?/1)
   end
 
   def get_article(slug) do
@@ -38,8 +38,14 @@ defmodule MwwPhoenix.Blog do
   end
 
   def most_recent(limit \\ 1) do
+    published_keys = Application.get_env(:mww_phoenix, :notion)[:published_keys]
+    dynamic_filters = Enum.reduce(published_keys, false, fn key, dynamic ->
+      dynamic([a], ^dynamic or field(a, ^String.to_atom(key)) == true)
+    end)
+
     Repo.all(
       from a in Article,
+        where: ^dynamic_filters,
         order_by: [desc: a.date],
         limit: ^limit
     )
@@ -56,7 +62,7 @@ defmodule MwwPhoenix.Blog do
   def load_articles() do
     ContentBuilder.build()
     |> Enum.each(fn article ->
-      insert_if_not_exists(article)
+      save_article(article)
     end)
   end
 
@@ -74,7 +80,7 @@ defmodule MwwPhoenix.Blog do
     Application.get_env(:mww_phoenix, MwwPhoenixWeb.Endpoint)[:url][:host]
   end
 
-  def insert_if_not_exists(article) do
+  def save_article(article) do
     notion_id = Map.get(article, :notion_id)
 
     existing_record =
@@ -91,7 +97,9 @@ defmodule MwwPhoenix.Blog do
         |> Repo.insert()
 
       true ->
-        {:ok, existing_record}
+        existing_record
+        |> Article.changeset(article)
+        |> Repo.update()
     end
   end
 end
