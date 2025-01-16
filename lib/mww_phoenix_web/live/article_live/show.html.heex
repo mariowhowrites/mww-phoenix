@@ -2,7 +2,7 @@
   <.link class="tracking-tight font-extrabold font-heading sm:text-2xl" navigate={~p"/"}>
     mariovega.dev
   </.link>
-  <nav class="inline-flex items-center uppercase gap-4 font-heading">
+  <nav class="inline-flex items-center uppercase gap-2 font-heading">
     <a href={~p"/blog"}>
       Blog
     </a>
@@ -20,19 +20,17 @@
     </a>
   </nav>
 </nav>
-<section id="header-section" class="flex flex-col gap-8 w-full md:w-1/2 md:mx-auto">
-  <div class="flex flex-col gap-2">
-    <h1 class="text-3xl md:text-6xl tracking-tight font-extrabold font-heading">
-      <%= @article.title %>
-    </h1>
-    <div>
-      <p class="text-lg md:text-2xl">
-        📘 <%= @article.category %>
-      </p>
-      <p class="text-lg md:text-2xl">
-        📆 <%= @article.date %>
-      </p>
-    </div>
+<section id="header-section" class="flex flex-col gap-8 w-full md:w-1/2 px-4 md:px-0 md:mx-auto">
+  <h1 class="text-3xl md:text-6xl tracking-tight font-extrabold font-heading">
+    <%= @article.title %>
+  </h1>
+  <div>
+    <p class="text-lg md:text-xl">
+      <span class="pr-2">📘</span> <%= @article.category %>
+    </p>
+    <p class="text-lg md:text-xl">
+      <span class="pr-2">📆</span> <%= @article.date %>
+    </p>
   </div>
   <p class="text-xl">
     <%= @article.description %>
@@ -52,7 +50,7 @@
     alt={@article.title}
   />
 </div>
-<div class="w-full md:w-1/2 md:mx-auto">
+<div class="w-full px-4 md:px-0 md:w-1/2 md:mx-auto">
   <%!-- <aside class="my-6 flex flex-col md:flex-row max-w-xl mx-auto">
     <div class="flex mb-2 md:md-0">
       <%= if @article.tags do %>

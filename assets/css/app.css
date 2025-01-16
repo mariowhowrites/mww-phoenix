@@ -20,7 +20,7 @@
 }
 
 .mww h2 {
-    @apply text-2xl mt-8 mb-4;
+    @apply text-3xl mt-16 mb-6;
 }
 
 .mww h3 {
@@ -74,6 +74,10 @@
 
 .mww .todo-wrapper .todo-wrapper {
     @apply ml-8;
+}
+
+.mww code.inline {
+    @apply bg-gray-200 px-1 py-0.5 rounded-md;
 }
 
 @font-face {
