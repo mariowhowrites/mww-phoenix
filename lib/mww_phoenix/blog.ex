@@ -39,9 +39,11 @@ defmodule MwwPhoenix.Blog do
 
   def most_recent(limit \\ 1) do
     published_keys = Application.get_env(:mww_phoenix, :notion)[:published_keys]
-    dynamic_filters = Enum.reduce(published_keys, false, fn key, dynamic ->
-      dynamic([a], ^dynamic or field(a, ^String.to_atom(key)) == true)
-    end)
+
+    dynamic_filters =
+      Enum.reduce(published_keys, false, fn key, dynamic ->
+        dynamic([a], ^dynamic or field(a, ^String.to_atom(key)) == true)
+      end)
 
     Repo.all(
       from a in Article,
@@ -101,5 +103,16 @@ defmodule MwwPhoenix.Blog do
         |> Article.changeset(article)
         |> Repo.update()
     end
+  end
+
+  def get_similar_articles(article) do
+    Repo.all(
+      from a in Article,
+        where: a.category == ^article.category,
+        where: a.notion_id != ^article.notion_id,
+        limit: 2,
+        order_by: [desc: a.date]
+    )
+    |> Enum.filter(&Article.should_be_published?/1)
   end
 end

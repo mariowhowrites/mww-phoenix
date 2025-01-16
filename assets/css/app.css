@@ -4,7 +4,7 @@
 
 /* This file is for your main application CSS */
 .mww {
-    @apply font-body text-lg;
+    @apply font-body text-xl;
 }
 
 .mww p {

@@ -25,7 +25,7 @@
   </aside>
   <main id="articles-index" class="col-span-8 md:col-span-6 row-span-8 flex flex-wrap overflow-auto">
     <%= for article <- @articles do %>
-      <div class="w-full md:w-1/2 pb-2 last:pb-0 pr-0 md:odd:pr-2 last:odd:w-full">
+      <div class="w-full md:w-1/2 pb-2 last:odd:pb-0 pr-0 md:odd:pr-2 last:odd:w-full">
         <li class="relative isolate flex flex-col justify-end overflow-hidden bg-gray-900 h-full px-4 pb-8 pt-12 sm:pt-48">
           <img
             srcset={Image.build_srcset(%Image{

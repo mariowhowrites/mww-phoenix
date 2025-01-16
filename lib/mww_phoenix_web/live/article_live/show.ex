@@ -17,7 +17,8 @@ defmodule MwwPhoenixWeb.ArticleLive.Show do
      socket
      |> assign(:page_title, article.title)
      |> assign(:article, article)
-     }
+     |> assign(:similar_articles, Blog.get_similar_articles(article))
+    }
   end
 
   def tag_class_string(article) do
