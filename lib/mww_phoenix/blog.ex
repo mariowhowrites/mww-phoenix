@@ -27,7 +27,7 @@ defmodule MwwPhoenix.Blog do
   # end
 
   def list_published_articles() do
-    Repo.all(from(a in Article)) |> Enum.filter(&Article.should_be_published?/1)
+    Repo.all(from(a in Article, where: ^published_filter()))
   end
 
   def get_article(slug) do
@@ -37,17 +37,18 @@ defmodule MwwPhoenix.Blog do
     )
   end
 
-  def most_recent(limit \\ 1) do
+  defp published_filter do
     published_keys = Application.get_env(:mww_phoenix, :notion)[:published_keys]
 
-    dynamic_filters =
-      Enum.reduce(published_keys, false, fn key, dynamic ->
-        dynamic([a], ^dynamic or field(a, ^String.to_atom(key)) == true)
-      end)
+    Enum.reduce(published_keys, false, fn key, dynamic ->
+      dynamic([a], ^dynamic or field(a, ^String.to_atom(key)) == true)
+    end)
+  end
 
+  def most_recent(limit \\ 1) do
     Repo.all(
       from a in Article,
-        where: ^dynamic_filters,
+        where: ^published_filter(),
         order_by: [desc: a.date],
         limit: ^limit
     )
@@ -110,9 +111,9 @@ defmodule MwwPhoenix.Blog do
       from a in Article,
         where: a.category == ^article.category,
         where: a.notion_id != ^article.notion_id,
+        where: ^published_filter(),
         limit: 2,
         order_by: [desc: a.date]
     )
-    |> Enum.filter(&Article.should_be_published?/1)
   end
 end
