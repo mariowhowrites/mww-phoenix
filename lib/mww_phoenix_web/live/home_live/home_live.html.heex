@@ -33,7 +33,7 @@
       <section class="flex">
         <ul class="flex flex-wrap md:flex-nowrap gap-2">
           <%= for article <- @articles |> Enum.take(2) do %>
-            <li class="relative w-full md:w-1/2 isolate flex flex-col justify-end overflow-hidden bg-gray-900 px-4 pb-8 pt-12 sm:pt-48">
+            <li class="relative w-full md:w-1/2 isolate flex flex-col justify-end overflow-hidden bg-gray-900 px-4 pb-8 pt-12 sm:pt-48 border-y md:border border-slate-500">
               <img
                 srcset={
                   Image.build_srcset(%Image{
