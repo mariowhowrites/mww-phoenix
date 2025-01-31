@@ -56,7 +56,7 @@
 }
 
 .mww .callout {
-    @apply flex gap-2 bg-gray-200 items-center my-4 p-2;
+    @apply flex gap-2 bg-gray-200 items-center my-4 p-2 text-black;
 }
 
 .mww hr {
