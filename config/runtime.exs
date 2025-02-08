@@ -61,6 +61,7 @@ if config_env() == :prod do
       ip: {0, 0, 0, 0, 0, 0, 0, 0},
       port: port
     ],
+    check_origin: ["https://mariovega.dev", "https://www.mariovega.dev"],
     secret_key_base: secret_key_base
 
 
